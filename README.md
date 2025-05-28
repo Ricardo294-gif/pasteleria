@@ -1,3 +1,80 @@
+# Mi Proyecto Web - Ricardo Justiniano
+
+## Acerca del Proyecto
+
+Este es un proyecto web desarrollado utilizando el framework Laravel. El proyecto está diseñado para [aquí puedes especificar el propósito principal de tu proyecto].
+
+## Requisitos del Sistema
+
+- PHP >= 8.1
+- Composer
+- MySQL/MariaDB
+- Node.js y NPM
+- XAMPP (entorno de desarrollo)
+
+## Instalación
+
+1. Clona el repositorio:
+```bash
+git clone [URL-del-repositorio]
+```
+
+2. Instala las dependencias de PHP:
+```bash
+composer install
+```
+
+3. Copia el archivo de configuración:
+```bash
+cp .env.example .env
+```
+
+4. Genera la clave de la aplicación:
+```bash
+php artisan key:generate
+```
+
+5. Configura la base de datos en el archivo `.env`
+
+6. Ejecuta las migraciones:
+```bash
+php artisan migrate
+```
+
+## Características Principales
+
+- [Lista de características principales de tu proyecto]
+- [Característica 2]
+- [Característica 3]
+
+## Estructura del Proyecto
+
+El proyecto sigue la estructura estándar de Laravel, con algunas personalizaciones:
+
+- `app/` - Contiene los modelos, controladores y lógica principal
+- `resources/` - Vistas, assets y archivos de frontend
+- `routes/` - Definición de rutas
+- `database/` - Migraciones y seeders
+
+## Tecnologías Utilizadas
+
+- Laravel 10.x
+- MySQL
+- Bootstrap 5
+- JavaScript/jQuery
+- [Otras tecnologías específicas de tu proyecto]
+
+## Autor
+
+- **Ricardo Justiniano**
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+---
+Desarrollado con ❤️ usando Laravel
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
