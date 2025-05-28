@@ -23,7 +23,11 @@ class ResenasController extends Controller
             if ($filter === 'approved') {
                 $query->where('is_approved', true);
             } elseif ($filter === 'pending') {
-                $query->where('is_approved', false);
+                $query->where('is_approved', false)
+                      ->whereNull('rejected_at');
+            } elseif ($filter === 'rejected') {
+                $query->where('is_approved', false)
+                      ->whereNotNull('rejected_at');
             } elseif ($filter === 'high-rating') {
                 $query->where('rating', '>=', 4);
             } elseif ($filter === 'low-rating') {
@@ -153,5 +157,33 @@ class ResenasController extends Controller
             
         $producto->calificacion = $avgRating ?? 0;
         $producto->save();
+    }
+
+    /**
+     * Rechazar una reseña
+     */
+    public function rechazar($id)
+    {
+        $resena = Review::findOrFail($id);
+        $resena->update([
+            'is_approved' => false,
+            'rejected_at' => now()
+        ]);
+        
+        return redirect()->back()->with('success', 'La reseña ha sido rechazada correctamente');
+    }
+
+    /**
+     * Aprobar una reseña
+     */
+    public function aprobar($id)
+    {
+        $resena = Review::findOrFail($id);
+        $resena->update([
+            'is_approved' => true,
+            'rejected_at' => null
+        ]);
+        
+        return redirect()->back()->with('success', 'La reseña ha sido aprobada correctamente');
     }
 }

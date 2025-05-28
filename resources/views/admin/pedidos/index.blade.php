@@ -28,6 +28,32 @@
             transform: translateX(0);
         }
     }
+
+    /* Estilos para los botones de acción */
+    .admin-action-btn {
+        padding: 0.375rem 0.75rem;
+        border: none;
+        background: none;
+        box-shadow: none !important;
+        transition: color 0.2s ease;
+    }
+
+    .admin-action-btn:hover {
+        color: #ff7070;
+    }
+
+    .admin-action-btn:focus {
+        outline: none;
+        box-shadow: none !important;
+    }
+
+    .admin-action-btn.view:hover {
+        color: #0d6efd;
+    }
+
+    .admin-action-btn.delete:hover {
+        color: #dc3545;
+    }
 </style>
 
 <div class="page-header">
@@ -120,7 +146,7 @@
                         <th>Total</th>
                         <th>Estado</th>
                         <th>Método de Pago</th>
-                        <th>Acciones</th>
+                        <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -136,9 +162,9 @@
                                 </span>
                             </td>
                             <td>{{ ucfirst($pedido->metodo_pago) }}</td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <a href="{{ route('admin.pedidos.ver', $pedido->codigo ?? $pedido->id) }}" class="btn btn-link admin-action-btn edit" title="Editar pedido">
+                            <td class="text-center">
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a href="{{ route('admin.pedidos.ver', $pedido->codigo ?? $pedido->id) }}" class="btn btn-link admin-action-btn view" title="Editar pedido">
                                         <i class="bi bi-pencil-fill"></i>
                                     </a>
                                     <form action="{{ route('admin.pedidos.eliminar', $pedido->codigo ?? $pedido->id) }}" method="POST" class="d-inline delete-form">

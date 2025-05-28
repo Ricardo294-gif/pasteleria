@@ -9,8 +9,8 @@ use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Admin\AdminController as AdminPanelController;
+use App\Http\Controllers\Admin\AdminPanelController;
+use App\Http\Controllers\Admin\PedidoController;
 use App\Http\Controllers\Admin\UsuarioController;
 use Illuminate\Support\Facades\DB;
 
@@ -484,6 +484,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     // Pedidos
     Route::get('pedidos/ver/{id}', [AdminPanelController::class, 'verPedido'])->name('pedidos.ver');
     Route::put('pedidos/actualizar-estado/{id}', [AdminPanelController::class, 'actualizarEstadoPedido'])->name('pedidos.actualizar-estado');
+    Route::delete('pedidos/eliminar/{id}', [AdminPanelController::class, 'eliminarPedido'])->name('pedidos.eliminar');
     
     // Reseñas
     Route::get('resenas', [App\Http\Controllers\Admin\ResenasController::class, 'index'])->name('resenas');

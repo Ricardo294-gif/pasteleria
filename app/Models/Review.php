@@ -15,7 +15,13 @@ class Review extends Model
         'compra_detalle_id',
         'rating',
         'comment',
-        'is_approved'
+        'is_approved',
+        'rejected_at'
+    ];
+
+    protected $casts = [
+        'is_approved' => 'boolean',
+        'rejected_at' => 'datetime'
     ];
 
     /**

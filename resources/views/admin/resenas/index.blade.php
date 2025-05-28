@@ -28,6 +28,107 @@
             transform: translateX(0);
         }
     }
+
+    .filter-tabs {
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 0;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .filter-tabs .nav-item {
+        flex: 1;
+        text-align: center;
+        display: flex;
+    }
+
+    .filter-tabs .nav-link {
+        color: #6c757d;
+        border: none;
+        padding: 8px 16px;
+        font-size: 0.95rem;
+        background: none;
+        transition: all 0.2s ease;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .filter-tabs .nav-link:hover {
+        color: #ff7070;
+    }
+
+    .filter-tabs .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #ff7070;
+        transform: scaleX(0);
+        transition: transform 0.2s ease;
+    }
+
+    .filter-tabs .nav-link:hover::after,
+    .filter-tabs .nav-link.active::after {
+        transform: scaleX(1);
+    }
+
+    /* Sobreescribir colores de Bootstrap para nav-pills */
+    .nav-pills .nav-link.active,
+    .nav-pills .show > .nav-link,
+    .nav-pills .nav-link:hover {
+        background-color: transparent !important;
+        color: #ff7070 !important;
+        border: none !important;
+    }
+
+    .nav-pills .nav-link:focus {
+        box-shadow: none !important;
+    }
+
+    /* Eliminar cualquier estilo adicional que pueda interferir */
+    .nav-pills .nav-link::after,
+    .nav-pills .nav-link::before {
+        display: none !important;
+    }
+
+    .search-container {
+        width: 300px;
+        position: relative;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 55%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        z-index: 2;
+    }
+
+    #searchResena {
+        border: 1px solid #dee2e6;
+        border-radius: 20px;
+        padding: 8px 15px 8px 40px;
+        width: 100%;
+        background-color: #fff;
+        height: 38px;
+        font-size: 0.9rem;
+        transition: all 0.2s ease-in-out;
+    }
+
+    #searchResena:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(255, 112, 112, 0.25);
+        border-color: #ff7070;
+    }
 </style>
 
 <div class="page-header">
@@ -53,35 +154,44 @@
 
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <div>
-            <i class="bi bi-star"></i> Reseñas de Clientes
+        <div class="d-flex align-items-center">
+            <i class="bi bi-star-fill me-2"></i> Lista de Reseñas
         </div>
-        <div class="search-container position-relative">
+        <div class="d-flex gap-3">
             <form action="{{ route('admin.resenas') }}" method="GET" class="search-container position-relative">
                 <i class="bi bi-search search-icon"></i>
-                <input type="text" name="search" class="form-control" placeholder="Buscar reseñas..." value="{{ $search }}" style="padding-left: 35px;">
+                <input type="text" name="search" id="searchResena" class="form-control" 
+                    placeholder="Buscar reseña..." value="{{ request('search') }}">
             </form>
         </div>
     </div>
-    
     <div class="card-body">
-        <div class="filters-container">
-            <a href="{{ route('admin.resenas', ['filter' => 'all']) }}" class="filter-btn {{ $filter == 'all' ? 'active' : '' }}">
-                Todas
-            </a>
-            <a href="{{ route('admin.resenas', ['filter' => 'pending']) }}" class="filter-btn {{ $filter == 'pending' ? 'active' : '' }}">
-                Pendientes
-            </a>
-            <a href="{{ route('admin.resenas', ['filter' => 'approved']) }}" class="filter-btn {{ $filter == 'approved' ? 'active' : '' }}">
-                Aprobadas
-            </a>
-            <a href="{{ route('admin.resenas', ['filter' => 'high-rating']) }}" class="filter-btn {{ $filter == 'high-rating' ? 'active' : '' }}">
-                ≥ 4 ★
-            </a>
-            <a href="{{ route('admin.resenas', ['filter' => 'low-rating']) }}" class="filter-btn {{ $filter == 'low-rating' ? 'active' : '' }}">
-                ≤ 2 ★
-            </a>
-        </div>
+        <ul class="nav nav-pills filter-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link {{ !request('filter') || request('filter') == 'all' ? 'active' : '' }}" 
+                   href="{{ route('admin.resenas', array_merge(request()->except('filter'), ['filter' => 'all'])) }}">
+                    Todas
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request('filter') == 'pending' ? 'active' : '' }}" 
+                   href="{{ route('admin.resenas', array_merge(request()->except('filter'), ['filter' => 'pending'])) }}">
+                    Pendientes
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request('filter') == 'approved' ? 'active' : '' }}" 
+                   href="{{ route('admin.resenas', array_merge(request()->except('filter'), ['filter' => 'approved'])) }}">
+                    Aprobadas
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request('filter') == 'rejected' ? 'active' : '' }}" 
+                   href="{{ route('admin.resenas', array_merge(request()->except('filter'), ['filter' => 'rejected'])) }}">
+                    Rechazadas
+                </a>
+            </li>
+        </ul>
 
         <div class="table-responsive">
             <table class="table table-hover align-middle">
@@ -164,65 +274,6 @@
 <div class="d-flex justify-content-center ps-3">
     {{ $resenas->onEachSide(1)->appends(['search' => $search, 'filter' => $filter])->links('vendor.pagination.bootstrap-5') }}
 </div>
-
-<style>
-.pagination {
-    margin-bottom: 0;
-}
-
-.pagination .page-item .page-link {
-    padding: 0.375rem 0.75rem;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    border: 1px solid #dee2e6;
-    margin: 0 2px;
-    color: #ff7070;
-}
-
-.pagination .page-item.active .page-link {
-    background-color: #ff7070;
-    border-color: #ff7070;
-    color: white;
-}
-
-.pagination .page-item .page-link:hover {
-    color: #ff5555;
-    background-color: #e9ecef;
-    border-color: #dee2e6;
-    text-decoration: none;
-}
-
-.pagination .page-item .page-link:focus {
-    box-shadow: 0 0 0 0.2rem rgba(255, 112, 112, 0.25);
-    z-index: 3;
-}
-
-.pagination .page-item.disabled .page-link {
-    color: #6c757d;
-    pointer-events: none;
-    background-color: #fff;
-    border-color: #dee2e6;
-}
-
-.search-container {
-    width: 300px;
-    position: relative;
-}
-
-.search-icon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6c757d;
-    z-index: 2;
-}
-
-.search-container .form-control:focus {
-    border-color: #ff7070;
-    box-shadow: 0 0 0 0.2rem rgba(255, 112, 112, 0.25);
-}
-</style>
 
 @push('scripts')
 <script>
