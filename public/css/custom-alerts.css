@@ -1,0 +1,282 @@
+/* ===== ESTILOS PERSONALIZADOS PARA ALERTAS FLOTANTES ===== */
+
+/* Contenedor de alertas */
+.alerts-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 400px;
+  max-width: calc(100% - 40px);
+  z-index: 9999;
+  pointer-events: none; /* Permite que los clics pasen a través del contenedor */
+}
+
+/* Contenedor de alertas para la página de perfil */
+.profile-alerts-container {
+  position: fixed;
+  width: 100%;
+  top: 60px; /* Justo debajo del header */
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Estilos base para todas las alertas */
+.custom-alert {
+  position: relative;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  font-weight: 500;
+  display: flex;
+  align-items: flex-start;
+  overflow: hidden;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  animation: alertSlideIn 0.4s ease forwards;
+  max-width: 100%;
+  opacity: 1;
+  z-index: 9999;
+  pointer-events: auto; /* Hace que la alerta sea interactiva */
+  background-color: #fff; /* Fondo blanco base para todas las alertas */
+  font-size: 1.05rem;
+}
+
+/* Alertas específicas para la página de perfil */
+.profile-alert {
+  width: auto;
+  min-width: 320px;
+  max-width: 550px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  animation: alertSlideDown 0.4s ease forwards;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  display: inline-flex;
+}
+
+.profile-alert .content {
+  text-align: left;
+  margin-top: 0.2rem;
+  white-space: normal;
+  line-height: 1.5;
+}
+
+.custom-alert::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 5px;
+  border-radius: 3px 0 0 3px;
+}
+
+.custom-alert .icon {
+  font-size: 1.4rem;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-alert .content {
+  flex: 1;
+  word-break: break-word; /* Evitar que textos largos desborden */
+  text-align: left;
+  margin-top: 0.2rem;
+  white-space: normal;
+  line-height: 1.5;
+}
+
+.custom-alert .btn-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  padding: 0.25rem;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.custom-alert .btn-close:hover {
+  opacity: 1;
+}
+
+.custom-alert ul {
+  margin-bottom: 0;
+  padding-left: 1.25rem;
+}
+
+.custom-alert:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.profile-alert:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+}
+
+/* Alert Success */
+.custom-alert-success {
+  background-color: #f0fffa;
+  color: #0d6853;
+}
+
+.custom-alert-success::before {
+  background-color: #20c997;
+}
+
+.custom-alert-success .icon {
+  color: #20c997;
+}
+
+/* Alert Danger */
+.custom-alert-danger {
+  background-color: #fff5f5;
+  color: #a42a2a;
+}
+
+.custom-alert-danger::before {
+  background-color: #ff7070;
+}
+
+.custom-alert-danger .icon {
+  color: #ff7070;
+}
+
+/* Alert Warning */
+.custom-alert-warning {
+  background-color: #fff9eb;
+  color: #9c6500;
+}
+
+.custom-alert-warning::before {
+  background-color: #ffc107;
+}
+
+.custom-alert-warning .icon {
+  color: #ffc107;
+}
+
+/* Alert Info */
+.custom-alert-info {
+  background-color: #f0f9ff;
+  color: #0a558c;
+}
+
+.custom-alert-info::before {
+  background-color: #0dcaf0;
+}
+
+.custom-alert-info .icon {
+  color: #0dcaf0;
+}
+
+/* Animación de entrada - desde la derecha */
+@keyframes alertSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animación de entrada - desde arriba para perfil */
+@keyframes alertSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animación de salida - escala y desvanecimiento */
+@keyframes alertFadeOutScale {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  20% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+/* Animación de salida para perfil - salida suave hacia arriba */
+@keyframes alertFadeOutUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+}
+
+/* Auto-desaparecer - animación limpia */
+.custom-alert.auto-dismiss {
+  animation: alertSlideIn 0.4s ease forwards;
+}
+
+.profile-alert.auto-dismiss {
+  animation: alertSlideDown 0.4s ease forwards;
+}
+
+.custom-alert.fade-out {
+  animation: alertFadeOutScale 0.6s ease forwards !important;
+}
+
+.profile-alert.fade-out {
+  animation: alertFadeOutUp 0.75s ease forwards !important;
+}
+
+/* Ajustes para presentación en dispositivos móviles */
+@media (max-width: 768px) {
+  .alerts-container {
+    width: calc(100% - 30px);
+    right: 15px;
+    top: 15px;
+  }
+  
+  .profile-alert {
+    width: 85%;
+    min-width: 280px;
+  }
+  
+  .custom-alert {
+    padding: 1.15rem 1.25rem;
+  }
+  
+  .custom-alert .icon {
+    font-size: 1.3rem;
+  }
+  
+  .custom-alert .btn-close {
+    top: 1.15rem;
+    right: 1.15rem;
+  }
+} 

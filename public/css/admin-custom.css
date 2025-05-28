@@ -1,0 +1,121 @@
+/* Colores personalizados para botones y elementos de la interfaz */
+:root {
+    --primary: #ff7070;
+    --primary-hover: #ff5656;
+    --secondary: #6c757d;
+    --secondary-hover: #5a6268;
+}
+
+/* Botón primario */
+.btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: #fff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+}
+
+/* Botón secundario */
+.btn-secondary {
+    background-color: var(--secondary) !important;
+    border-color: var(--secondary) !important;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+    background-color: var(--secondary-hover) !important;
+    border-color: var(--secondary-hover) !important;
+}
+
+/* Botón outline primario */
+.btn-outline-primary {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: var(--primary) !important;
+    color: #fff !important;
+}
+
+/* Botón outline secundario */
+.btn-outline-secondary {
+    color: var(--secondary) !important;
+    border-color: var(--secondary) !important;
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus,
+.btn-outline-secondary:active {
+    background-color: var(--secondary) !important;
+    color: #fff !important;
+}
+
+/* Elementos de formulario */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 112, 112, 0.25) !important;
+}
+
+/* Switch de Bootstrap */
+.form-check-input:checked {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+/* Links */
+a {
+    color: var(--primary);
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+/* Badges y elementos de estado */
+.badge.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+.badge.bg-secondary {
+    background-color: var(--secondary) !important;
+}
+
+/* Bordes activos y focus */
+.border-primary {
+    border-color: var(--primary) !important;
+}
+
+/* Textos */
+.text-primary {
+    color: var(--primary) !important;
+}
+
+/* Fondos */
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+/* Paginación */
+.page-link {
+    color: var(--primary);
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+/* Progress bars */
+.progress-bar {
+    background-color: var(--primary);
+} 

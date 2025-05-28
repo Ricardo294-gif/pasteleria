@@ -1,0 +1,64 @@
+/* Podemos eliminar los estilos anteriores ya que ahora usamos el sistema de alertas personalizadas */
+
+/* Estilo para anular los efectos de hover en botones deshabilitados */
+.btn-no-hover {
+  pointer-events: none !important;
+  cursor: default !important;
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.85 !important;
+  transition: none !important;
+}
+
+.btn-no-hover:hover,
+.btn-no-hover:focus,
+.btn-no-hover:active {
+  background-color: inherit !important;
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.85 !important;
+}
+
+/* Estado específico para botón de éxito */
+.btn-no-hover.btn-success {
+  background-color: #28a745 !important;
+  border-color: #28a745 !important;
+  color: white !important;
+}
+
+/* Estado específico para botón de error */
+.btn-no-hover.btn-danger {
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+  color: white !important;
+} 
+
+/* Estilos para el sistema de filtrado de reseñas */
+.filter-btn {
+    background: transparent;
+    color: #666;
+    border: 1px solid #ddd;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: #fff5f5;
+    border-color: #ff7070;
+    color: #ff7070;
+}
+
+.filter-btn.active {
+    background: #ff7070;
+    color: white;
+    border-color: #ff7070;
+}
+
+.review-card {
+    transition: opacity 0.3s ease;
+    opacity: 1;
+} 
