@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="{{ app()->getLocale() }}" data-theme="light">
 
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>@yield('title', 'Mi Sueño Dulce')</title>
+    <title>@yield('title', __('messages.hero_title'))</title>
     <meta name="description" content="Pastelería Artesanal - Los más deliciosos postres hechos con amor e ingredientes de primera calidad">
     <meta name="keywords" content="pasteles, repostería, tartas, dulces, postres, personalizado, eventos, cumpleaños">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -58,19 +58,18 @@
     <header id="header" class="header d-flex align-items-center sticky-top">
         <div class="container position-relative d-flex align-items-center justify-content-between">
             <a href="{{ route('index') }}" class="logo d-flex align-items-center me-auto me-xl-0">
-                <h1 class="sitename" style="font-family: 'Dancing Script', cursive; font-size: 2rem;">Mi sueño
-                    <span style="font-size: 2rem; margin-right: 5px;"> dulce</span>
+                <h1 class="sitename" style="font-family: 'Dancing Script', cursive; font-size: 2rem;">{{ __('messages.hero_title') }}
                 </h1>
                 <img src="{{ asset('img/logo/logo.png') }}" alt="Logo" class="logo">
             </a>
 
             <nav id="navmenu" class="navmenu">
                 <ul class="nav-links">
-                    <li><a href="{{ route('index') }}#hero" class="{{ request()->routeIs('index') && request()->has('hero') ? 'active' : '' }}">Inicio</a></li>
-                    <li><a href="{{ route('index') }}#about" class="{{ request()->routeIs('index') && request()->has('about') ? 'active' : '' }}">Sobre Nosotros</a></li>
-                    <li><a href="{{ route('index') }}#menu" class="{{ request()->routeIs('index') && request()->has('menu') ? 'active' : '' }}">Menú</a></li>
-                    <li><a href="{{ route('index') }}#proceso" class="{{ request()->routeIs('index') && request()->has('proceso') ? 'active' : '' }}">Proceso</a></li>  
-                    <li><a href="{{ route('index') }}#contact" class="{{ request()->routeIs('index') && request()->has('contact') ? 'active' : '' }}">Contacto</a></li>
+                    <li><a href="{{ route('index') }}#hero" class="{{ request()->routeIs('index') && request()->has('hero') ? 'active' : '' }}">{{ __('messages.home') }}</a></li>
+                    <li><a href="{{ route('index') }}#about" class="{{ request()->routeIs('index') && request()->has('about') ? 'active' : '' }}">{{ __('messages.about') }}</a></li>
+                    <li><a href="{{ route('index') }}#menu" class="{{ request()->routeIs('index') && request()->has('menu') ? 'active' : '' }}">{{ __('messages.menu') }}</a></li>
+                    <li><a href="{{ route('index') }}#proceso" class="{{ request()->routeIs('index') && request()->has('proceso') ? 'active' : '' }}">{{ __('messages.process') }}</a></li>  
+                    <li><a href="{{ route('index') }}#contact" class="{{ request()->routeIs('index') && request()->has('contact') ? 'active' : '' }}">{{ __('messages.contact') }}</a></li>
                     <li class="language-selector">
                         <div class="lang-item">
                             <a href="#" class="nav-link {{ app()->getLocale() == 'es' ? 'active' : '' }}" data-language="es">ES</a>
@@ -108,13 +107,13 @@
                             <li><hr class="dropdown-divider" style="margin-top: 0px; margin-bottom: 0px;"></li>
                             <li>
                                 <a class="dropdown-item" href="{{ route('perfil') }}">
-                                    <i class="bi bi-person me-2"></i>Mi Perfil
+                                    <i class="bi bi-person me-2"></i>{{ __('messages.profile') }}
                                 </a>
                             </li>
                             @if(auth()->user()->is_admin == 1)
                             <li>
                                 <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
-                                    <i class="bi bi-speedometer2 me-2"></i>Panel de Administración
+                                    <i class="bi bi-speedometer2 me-2"></i>{{ __('messages.admin_panel') }}
                                 </a>
                             </li>
                             @endif
@@ -123,7 +122,7 @@
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
                                     <button type="submit" class="dropdown-item logout-item">
-                                        <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                                        <i class="bi bi-box-arrow-right me-2"></i>{{ __('messages.logout') }}
                                     </button>
                                 </form>
                             </li>
@@ -137,11 +136,11 @@
                                     <span class="cart-count">0</span>
                                 </div>
                             </div>
-                            <div class="cart-text">Mi carrito</div>
+                            <div class="cart-text">{{ __('messages.my_cart') }}</div>
                         </div>
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="btn-proceso">Iniciar Sesión</a>
+                    <a href="{{ route('login') }}" class="btn-proceso">{{ __('messages.login') }}</a>
                     <a href="{{ route('carrito.index') }}" class="sweet-cart-btn">
                         <div class="cart-container">
                             <div class="cart-icon-wrapper">
@@ -150,7 +149,7 @@
                                     <span class="cart-count">0</span>
                                 </div>
                             </div>
-                            <div class="cart-text">Mi carrito</div>
+                            <div class="cart-text">{{ __('messages.my_cart') }}</div>
                         </div>
                     </a>
                 @endauth
@@ -159,7 +158,7 @@
     </header>
 
     <!-- Botón para cambiar tema -->
-    <button class="theme-toggle-btn" id="themeToggle" title="Cambiar modo">
+    <button class="theme-toggle-btn" id="themeToggle" title="{{ __('messages.change_mode') }}">
         <i class="bi bi-sun-fill"></i>
     </button>
 
@@ -240,9 +239,42 @@
     <script src="{{ asset('js/carrito.js') }}"></script>
     <script src="{{ asset('js/contact-form.js') }}"></script>
 
+    <!-- Script para cambio de idioma -->
     <script>
-        // Script para cerrar el menú desplegable con el botón X
         document.addEventListener('DOMContentLoaded', function() {
+            // Manejar cambio de idioma
+            const languageLinks = document.querySelectorAll('[data-language]');
+            languageLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const language = this.getAttribute('data-language');
+                    
+                    // Crear formulario para enviar la solicitud
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route("change.language") }}';
+                    
+                    // Agregar token CSRF
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+                    
+                    // Agregar idioma
+                    const languageInput = document.createElement('input');
+                    languageInput.type = 'hidden';
+                    languageInput.name = 'language';
+                    languageInput.value = language;
+                    form.appendChild(languageInput);
+                    
+                    // Enviar formulario
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            });
+
+            // Script para cerrar el menú desplegable con el botón X
             const closeDropdownBtn = document.querySelector('.btn-close-dropdown');
             if (closeDropdownBtn) {
                 closeDropdownBtn.addEventListener('click', function(e) {
@@ -273,6 +305,7 @@
         });
     </script>
 
+    <!-- Estilos CSS existentes -->
     <style>
         .login-btn:hover, .register-btn:hover {
             transform: translateY(-3px);
@@ -291,7 +324,7 @@
             background: transparent;
             padding: 0;
             cursor: pointer;
-            transition: none; /* Eliminamos la transición global */
+            transition: none;
         }
 
         .profile-icon-wrapper {
@@ -326,7 +359,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Aplicamos los efectos solo en hover, no cuando está abierto */
         .user-profile-btn:hover .profile-icon-wrapper {
             transform: scale(1.1);
             background-color: rgba(255, 112, 112, 0.2);
@@ -343,14 +375,12 @@
             transform: scale(1);
         }
         
-        /* Estilos para el estado abierto del dropdown */
         .user-profile-btn.show .profile-icon-wrapper {
             transform: scale(1.1);
             background-color: rgba(255, 112, 112, 0.2);
             box-shadow: 0 4px 8px rgba(255, 112, 112, 0.3);
         }
         
-        /* Evitar la transición al cerrar el dropdown */
         .dropdown-menu.profile-dropdown {
             animation: none;
             transition: none;
@@ -422,7 +452,6 @@
             text-align: center;
         }
         
-        /* Botón de cierre del menú desplegable */
         .btn-close-dropdown {
             background: transparent;
             border: none;
@@ -451,7 +480,6 @@
             color: #ff7070;
         }
         
-        /* Estilo específico para el botón de cerrar sesión */
         .logout-item {
             transition: color 0.2s ease !important;
             transform: none !important;
@@ -475,7 +503,6 @@
             box-shadow: none !important;
         }
 
-        /* Nuevo diseño del carrito sin fondo */
         .sweet-cart-btn {
             position: relative;
             text-decoration: none;
@@ -630,41 +657,32 @@
             const htmlElement = document.documentElement;
             const themeIcon = themeToggleBtn.querySelector('i');
             
-            // Comprobar si hay una preferencia guardada
             const savedTheme = localStorage.getItem('theme') || 'light';
             
-            // Aplicar el tema guardado
             applyTheme(savedTheme);
             
-            // Manejar clic en botón de cambio de tema
             themeToggleBtn.addEventListener('click', function() {
                 const currentTheme = htmlElement.getAttribute('data-theme');
                 const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
                 
                 applyTheme(newTheme);
-                
-                // Guardar preferencia
                 localStorage.setItem('theme', newTheme);
             });
             
-            // Función para aplicar el tema
             function applyTheme(theme) {
                 htmlElement.setAttribute('data-theme', theme);
                 
-                // Actualizar ícono del botón
                 if (theme === 'dark') {
                     themeIcon.classList.remove('bi-sun-fill');
                     themeIcon.classList.add('bi-moon-fill');
-                    themeToggleBtn.title = "Cambiar a modo claro";
+                    themeToggleBtn.title = "{{ __('messages.change_mode') }}";
                     
-                    // Cambiar favicon en modo oscuro
                     document.querySelector('link[rel="icon"]').href = "{{ asset('img/logo/img-ico.ico') }}";
                 } else {
                     themeIcon.classList.remove('bi-moon-fill');
                     themeIcon.classList.add('bi-sun-fill');
-                    themeToggleBtn.title = "Cambiar a modo oscuro";
+                    themeToggleBtn.title = "{{ __('messages.change_mode') }}";
                     
-                    // Restaurar favicon original
                     document.querySelector('link[rel="icon"]').href = "{{ asset('img/favicon.png') }}";
                 }
             }

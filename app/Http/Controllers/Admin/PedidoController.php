@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Compra;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PedidoController extends Controller
 {
@@ -67,5 +68,59 @@ class PedidoController extends Controller
 
         return redirect()->route('admin.pedidos.ver', $pedido->id)
             ->with('success', 'Estado del pedido actualizado correctamente');
+    }
+
+    /**
+     * Eliminar un pedido
+     */
+    public function eliminar($id)
+    {
+        // Verificar si el usuario es administrador
+        if (!Auth::user() || Auth::user()->is_admin != 1) {
+            return redirect()->route('index')->with('error', 'No tienes permiso para acceder a esta sección');
+        }
+
+        try {
+            // Iniciar transacción
+            \Illuminate\Support\Facades\DB::beginTransaction();
+
+            // Buscar el pedido por código o ID
+            $pedido = Compra::with(['detalles', 'detalles.reviews'])
+                ->where('codigo', $id)
+                ->orWhere('id', $id)
+                ->firstOrFail();
+            
+            // Registrar información de depuración
+            \Illuminate\Support\Facades\Log::info('Intentando eliminar pedido ID/Código: ' . $id);
+            \Illuminate\Support\Facades\Log::info('Pedido encontrado - ID: ' . $pedido->id . ', Código: ' . $pedido->codigo);
+            \Illuminate\Support\Facades\Log::info('Detalles encontrados: ' . $pedido->detalles->count());
+            
+            // Eliminar las reseñas asociadas a los detalles primero
+            foreach ($pedido->detalles as $detalle) {
+                $detalle->reviews()->delete();
+            }
+
+            // Eliminar los detalles
+            $pedido->detalles()->delete();
+            
+            // Eliminar el pedido
+            $pedido->delete();
+
+            // Confirmar transacción
+            \Illuminate\Support\Facades\DB::commit();
+
+            return redirect()->route('admin.pedidos')
+                ->with('success', 'Pedido eliminado correctamente');
+        } catch (\Exception $e) {
+            // Revertir transacción en caso de error
+            \Illuminate\Support\Facades\DB::rollBack();
+            
+            // Registrar el error
+            \Illuminate\Support\Facades\Log::error('Error al eliminar pedido: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            return redirect()->route('admin.pedidos')
+                ->with('error', 'Error al eliminar el pedido: ' . $e->getMessage());
+        }
     }
 }
