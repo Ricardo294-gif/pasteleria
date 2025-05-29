@@ -68,17 +68,19 @@
                                 </div>
                                 
                                 <div class="ms-3">
-                                    <span class="text-warning" style="font-size: 1.2rem; padding: 5px 10px; border-radius: 16px; display: inline-block;">
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <= round($producto->getAverageRatingAttribute()))
-                                        <i class="bi bi-star-fill"></i>
-                                            @else
-                                                <i class="bi bi-star"></i>
-                                            @endif
-                                        @endfor
-                                    </span>
-                                    <span class="ms-2 text-muted" style="font-weight: 600; color: #666666; font-size: 0.85rem;">({{ $producto->getReviewsCountAttribute() }} opiniones)</span>
-                        </div>
+                                    <div class="rating-container">
+                                        <span class="text-warning" style="font-size: 1.2rem; padding: 5px 10px; border-radius: 16px; display: inline-block;">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= round($producto->getAverageRatingAttribute()))
+                                                    <i class="bi bi-star-fill"></i>
+                                                @else
+                                                    <i class="bi bi-star"></i>
+                                                @endif
+                                            @endfor
+                                        </span>
+                                        <span class="text-muted" style="font-weight: 600; color: #666666; font-size: 0.85rem;">({{ $producto->getReviewsCountAttribute() }} opiniones)</span>
+                                    </div>
+                                </div>
                             </div>
                             </div>
 
@@ -635,6 +637,27 @@
     /* Estilos mejorados para la página de producto */
     .product-detail {
         padding: 70px 0;
+    }
+
+    /* Estilos para las estrellas y opiniones */
+    .rating-container {
+        display: flex;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .rating-container {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .rating-container .text-warning {
+            margin-bottom: 5px;
+        }
+
+        .rating-container .text-muted {
+            padding-left: 5px;
+        }
     }
 
     .product-image {

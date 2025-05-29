@@ -38,8 +38,8 @@
                             <div class="cart-item" style="background: white; border-radius: 6px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
                                     <div class="row align-items-center">
                                     <!-- Imagen del producto -->
-                                    <div class="col-md-2">
-                                        <div style="width: 80px; height: 80px; border-radius: 6px; overflow: hidden;">
+                                    <div class="col-4 col-md-2">
+                                        <div style="width: 80px; height: 80px; border-radius: 6px; overflow: hidden; margin: 0 auto;">
                                             @if(is_object($item['producto']))
                                                 <img src="{{ asset('img/productos/' . $item['producto']->imagen) }}"
                                                      alt="{{ $item['producto']->nombre }}"
@@ -53,11 +53,11 @@
                                     </div>
                                     
                                     <!-- Detalles del producto -->
-                                    <div class="col-md-4">
+                                    <div class="col-8 col-md-4">
                                             @if(is_object($item['producto']))
-                                            <h4 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 5px; color: #333;">{{ $item['producto']->nombre }}</h4>
+                                            <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 5px; color: #333;">{{ $item['producto']->nombre }}</h4>
                                             @else
-                                            <h4 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 5px; color: #333;">{{ $item['producto']['nombre'] }}</h4>
+                                            <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 5px; color: #333;">{{ $item['producto']['nombre'] }}</h4>
                                         @endif
                                         
                                         <div style="margin-bottom: 8px; display: flex; align-items: center;">
@@ -85,34 +85,34 @@
                                                     @endif
                                                 </span>
                                         </div>
-                                            </div>
+                                    </div>
 
                                     <!-- Controles de cantidad -->
-                                    <div class="col-md-3">
+                                    <div class="col-6 col-md-3 mt-3 mt-md-0">
                                         <div style="display: flex; align-items: center; justify-content: center;">
                                             <div style="display: flex; align-items: center; background-color: #f5f5f5; border-radius: 4px; padding: 5px 10px;">
                                                 <button class="btn-decrementar" data-id="{{ $item['id'] }}" style="width: 30px; height: 30px; border-radius: 50%; border: none; background-color: white; color: #666; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                                            <i class="bi bi-dash"></i>
-                                                        </button>
+                                                    <i class="bi bi-dash"></i>
+                                                </button>
                                                 <span class="cantidad-producto" style="padding: 0 15px; font-weight: 600; color: #333; min-width: 40px; text-align: center;">{{ $item['cantidad'] }}</span>
                                                 <button class="btn-incrementar" data-id="{{ $item['id'] }}" style="width: 30px; height: 30px; border-radius: 50%; border: none; background-color: white; color: #666; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                                            <i class="bi bi-plus"></i>
-                                                        </button>
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                     
                                     <!-- Subtotal y eliminar -->
-                                        <div class="col-md-3 text-end">
-                                        <div style="margin-bottom: 10px; font-size: 1.2rem; font-weight: 700; color: #333;">
+                                    <div class="col-6 col-md-3 mt-3 mt-md-0 text-end">
+                                        <div style="margin-bottom: 10px; font-size: 1.1rem; font-weight: 700; color: #333;">
                                             €<span class="subtotal-producto">{{ number_format($item['subtotal'], 2) }}</span>
                                         </div>
                                         <button type="button" class="btn-eliminar" data-id="{{ $item['id'] }}" style="background-color: #ff7070; color: white; border: none; border-radius: 10px; padding: 5px 15px; font-size: 0.9rem; transition: all 0.3s ease;">
                                             <i class="bi bi-trash me-1"></i> Eliminar
-                                                </button>
-                                        </div>
+                                        </button>
                                     </div>
                                 </div>
+                            </div>
                             @endforeach
                     </div>
 
@@ -161,11 +161,57 @@
                     <p style="color: #888; margin-bottom: 30px;">Aún no has añadido productos a tu carrito</p>
                     <a href="{{ route('index') }}" style="display: inline-block; background-color: #ff7070; color: white; border-radius: 10px; padding: 12px 25px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(255, 112, 112, 0.2);">
                         <i class="bi bi-shop me-2"></i> Ir al menú de productos
-                        </a>
+                    </a>
                 </div>
             @endif
         </div>
     </section>
+
+    <style>
+    @media (max-width: 767px) {
+        .cart-item {
+            padding: 15px !important;
+        }
+        
+        .cart-item h4 {
+            font-size: 1rem !important;
+        }
+        
+        .cart-item .precio-unitario {
+            font-size: 0.9rem !important;
+        }
+        
+        .cart-item .tamano-badge {
+            font-size: 0.8rem !important;
+        }
+        
+        .btn-eliminar {
+            padding: 4px 12px !important;
+            font-size: 0.8rem !important;
+        }
+        
+        .cantidad-producto {
+            padding: 0 10px !important;
+        }
+        
+        .btn-decrementar,
+        .btn-incrementar {
+            width: 25px !important;
+            height: 25px !important;
+        }
+    }
+    
+    @media (max-width: 575px) {
+        .cart-page {
+            padding: 30px 0 !important;
+        }
+        
+        .container {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+    }
+    </style>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

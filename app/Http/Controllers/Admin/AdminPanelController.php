@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Compra;
+use App\Models\User;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -11,6 +13,40 @@ use Illuminate\Support\Facades\Mail;
 
 class AdminPanelController extends Controller
 {
+    /**
+     * Mostrar el panel de control de administración
+     */
+    public function dashboard()
+    {
+        // Estadísticas de pedidos
+        $totalPedidos = Compra::count();
+        $pedidosPendientes = Compra::where('estado', 'confirmado')->count();
+        $pedidosEnProceso = Compra::where('estado', 'en_proceso')->count();
+        $pedidosCompletados = Compra::where('estado', 'recogido')->count();
+
+        // Estadísticas adicionales
+        $totalProductos = Producto::count();
+        $totalUsuarios = User::count();
+        $totalCompras = $totalPedidos; // Ya lo tenemos de arriba
+
+        // Ventas recientes (últimos 10 pedidos)
+        $ventasRecientes = Compra::with(['user', 'detalles'])
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        return view('admin.dashboard', compact(
+            'totalPedidos',
+            'pedidosPendientes',
+            'pedidosEnProceso',
+            'pedidosCompletados',
+            'totalProductos',
+            'totalUsuarios',
+            'totalCompras',
+            'ventasRecientes'
+        ));
+    }
+
     public function actualizarEstadoPedido(Request $request, $id)
     {
         $pedido = Compra::findOrFail($id);
