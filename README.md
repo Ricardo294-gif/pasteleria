@@ -54,6 +54,11 @@ php artisan migrate
 php artisan serve
 ```
 
+8. Este es el admin (Solo se puede comprar con un usuario normal):
+```bash
+ricardo10justiniano@gmail.com 1234567890
+```
+
 ## Características Principales
 
 - Sistema de autenticación completo con registro, login y recuperación de contraseña
