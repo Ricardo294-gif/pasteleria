@@ -66,20 +66,20 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Contenido principal -->
         <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
           <div class="about-content">
             <h3 class="about-heading mb-4">El arte de endulzar momentos</h3>
-            
+
             <p class="about-text">
               Desde 2010 convertimos ingredientes en emociones. En Mi Sueño Dulce no solo horneamos pasteles; creamos recuerdos que perduran en el paladar y en el corazón.
             </p>
-            
+
             <p class="about-text mb-4">
               Cada creación que sale de nuestro horno lleva consigo la dedicación de manos expertas que transforman lo cotidiano en extraordinario. Porque para nosotros, la repostería no es solo un oficio, es nuestra forma de vida.
             </p>
-            
+
             <!-- Valores en 3 tarjetas limpias -->
             <div class="row g-4 mt-3">
               <div class="col-md-4 text-center">
@@ -88,14 +88,14 @@
                   <h5>Pasión</h5>
                 </div>
               </div>
-              
+
               <div class="col-md-4 text-center">
                 <div class="value-card">
                   <i class="bi bi-gem"></i>
                   <h5>Calidad</h5>
                 </div>
               </div>
-              
+
               <div class="col-md-4 text-center">
                 <div class="value-card">
                   <i class="bi bi-stars"></i>
@@ -358,13 +358,13 @@
     } else {
       console.error('PureCounter no está cargado. Asegúrate de incluir la biblioteca.');
     }
-    
+
     // Animación para el contador en la sección Sobre Nosotros
     const counterElement = document.querySelector('.counter');
     if (counterElement) {
       const targetNumber = 15; // El número final que queremos mostrar
       let currentNumber = 0;
-      
+
       // Función para verificar si el elemento es visible en el viewport
       function isElementInViewport(el) {
         const rect = el.getBoundingClientRect();
@@ -375,31 +375,31 @@
           rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
       }
-      
+
       // Función para animar el contador
       function animateCounter() {
         if (isElementInViewport(counterElement) && currentNumber < targetNumber) {
           counterElement.classList.add('animate-count');
           const duration = 2000; // 2 segundos para completar la animación
           const interval = duration / targetNumber;
-          
+
           const timer = setInterval(function() {
             currentNumber++;
             counterElement.textContent = currentNumber;
-            
+
             if (currentNumber >= targetNumber) {
               clearInterval(timer);
             }
           }, interval);
-          
+
           // Eliminar el event listener una vez que la animación ha comenzado
           window.removeEventListener('scroll', animateCounter);
         }
       }
-      
+
       // Iniciar la animación si el elemento es visible al cargar la página
       animateCounter();
-      
+
       // O iniciarla cuando el usuario haga scroll hasta el elemento
       window.addEventListener('scroll', animateCounter);
     }

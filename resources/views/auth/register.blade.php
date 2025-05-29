@@ -11,7 +11,7 @@
                 <i class="bi bi-arrow-left" style="margin-right: 5px;"></i> Volver a la página principal
             </a>
         </div>
-        
+
         <div class="row justify-content-center">
             <div class="col-lg-7 col-md-9">
                 <div class="register-card">
@@ -19,7 +19,7 @@
                         <h2>¡Únete a nuestra dulce comunidad!</h2>
                         <p>Regístrate para descubrir un mundo de sabores</p>
                     </div>
-                    
+
                     <div class="register-card-body">
                         <div class="decorative-elements">
                             <div class="decorative-element" id="cupcake">
@@ -29,7 +29,7 @@
                                 <i class="bi bi-cake2"></i>
                             </div>
                         </div>
-                        
+
                         <form method="POST" action="{{ route('register') }}">
                             @csrf
 
@@ -45,7 +45,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-6">
                                     <div class="form-floating mb-4">
                                         <input id="apellido" type="text" class="form-control @error('apellido') is-invalid @enderror" name="apellido" value="{{ old('apellido') }}" required autocomplete="apellido" placeholder="Tu apellido">
@@ -85,7 +85,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-6">
                                     <div class="form-floating mb-4">
                                         <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="Confirmar contraseña">
@@ -108,7 +108,7 @@
                             </div>
                         </form>
                     </div>
-                    
+
                     <div class="register-card-footer">
                         <p>¿Ya tienes una cuenta? <a href="{{ route('login') }}" class="login-link">Iniciar Sesión</a></p>
                     </div>
@@ -126,7 +126,7 @@
         position: relative;
         overflow: hidden;
     }
-    
+
     .register-container::before {
         content: '';
         position: absolute;
@@ -138,7 +138,7 @@
         border-radius: 50%;
         z-index: 0;
     }
-    
+
     .register-container::after {
         content: '';
         position: absolute;
@@ -150,7 +150,7 @@
         border-radius: 50%;
         z-index: 0;
     }
-    
+
     .register-card {
         background-color: white;
         border-radius: 20px;
@@ -159,7 +159,7 @@
         position: relative;
         z-index: 1;
     }
-    
+
     .register-card::before {
         content: '';
         position: absolute;
@@ -169,37 +169,37 @@
         height: 5px;
         background: linear-gradient(to right, #ff9e9e, #ff7070);
     }
-    
+
     .register-card-header {
         padding: 30px;
         text-align: center;
         color: #333;
         background-color: #fff;
     }
-    
+
     .register-card-header h2 {
         font-family: 'Dancing Script', cursive;
         font-size: 2.5rem;
         color: #ff7070;
         margin-bottom: 10px;
     }
-    
+
     .register-card-header p {
         color: #888;
         font-size: 1rem;
     }
-    
+
     .register-card-body {
         padding: 0 40px 30px;
         position: relative;
     }
-    
+
     .decorative-elements {
         position: relative;
         height: 60px;
         margin-bottom: 20px;
     }
-    
+
     .decorative-element {
         position: absolute;
         width: 60px;
@@ -211,24 +211,24 @@
         color: white;
         animation: float 3s ease-in-out infinite;
     }
-    
+
     .decorative-element i {
         font-size: 2rem;
     }
-    
+
     #cupcake {
         background: linear-gradient(135deg, #ff9e9e, #ff7070);
         top: 0;
         left: 30%;
         animation-delay: 0.5s;
     }
-    
+
     #cake {
         background: linear-gradient(135deg, #ff7070, #ff5050);
         top: 10px;
         right: 30%;
     }
-    
+
     @keyframes float {
         0% {
             transform: translateY(0px);
@@ -240,34 +240,34 @@
             transform: translateY(0px);
         }
     }
-    
+
     .form-floating {
         margin-bottom: 20px;
     }
-    
+
     .form-control {
         border-radius: 10px;
         padding: 12px 15px;
         border: 2px solid #eee;
         transition: all 0.3s ease;
     }
-    
+
     .form-control:focus {
         border-color: #ff7070;
         box-shadow: 0 0 0 0.25rem rgba(255, 112, 112, 0.25);
     }
-    
+
     .form-check-input:checked {
         background-color: #ff7070;
         border-color: #ff7070;
     }
-    
+
     .terms-link {
         color: #ff7070;
         text-decoration: none;
         font-weight: 600;
     }
-    
+
     .btn-register {
         background: linear-gradient(to right, #ff9e9e, #ff7070);
         border: none;
@@ -278,37 +278,37 @@
         font-weight: 600;
         transition: all 0.3s ease;
     }
-    
+
     .btn-register:hover {
         transform: translateY(-3px);
         box-shadow: 0 10px 20px rgba(255, 112, 112, 0.2);
         background: linear-gradient(to right, #ff7070, #ff5050);
     }
-    
+
     .register-card-footer {
         text-align: center;
         padding: 20px 30px;
         background-color: #f9f9f9;
         border-top: 1px solid #eee;
     }
-    
+
     .login-link {
         color: #ff7070;
         font-weight: 600;
         text-decoration: none;
         transition: all 0.3s ease;
     }
-    
+
     .login-link:hover {
         color: #ff5050;
         text-decoration: underline;
     }
-    
+
     @media (max-width: 768px) {
         .register-card-body {
             padding: 0 20px 20px;
         }
-        
+
         .decorative-element {
             display: none;
         }

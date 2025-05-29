@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\AdminPanelController;
 use App\Http\Controllers\Admin\PedidoController;
 use App\Http\Controllers\Admin\UsuarioController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 
 Route::get('/', function () {
     return view('index');
@@ -184,16 +185,16 @@ Route::post('/payment/verify', function (Request $request) {
 
 Route::post('/payment/resend', function (Request $request) {
     \Illuminate\Support\Facades\Log::info('Solicitud de reenvío de código recibida', [
-        'ajax' => $request->ajax(), 
+        'ajax' => $request->ajax(),
         'headers' => $request->header()
     ]);
-    
+
     // Obtener el usuario autenticado
     $user = Auth::user();
-    
+
     if (!$user) {
         \Illuminate\Support\Facades\Log::error('No hay usuario autenticado para reenviar código');
-        
+
         return response()->json([
             'success' => false,
             'message' => 'No se pudo autenticar el usuario'
@@ -232,7 +233,7 @@ Route::post('/payment/resend', function (Request $request) {
                     ->subject('Código de Verificación (Reenvío) - Mi Sueño Dulce');
         });
         \Illuminate\Support\Facades\Log::info('Correo enviado a: ' . $user->email);
-        
+
         // Si es una solicitud AJAX, devolver respuesta JSON
         if ($request->ajax()) {
             return response()->json([
@@ -245,14 +246,14 @@ Route::post('/payment/resend', function (Request $request) {
         return back()->with('success', 'Hemos enviado un nuevo código de verificación a tu correo electrónico.');
     } catch (\Exception $e) {
         \Illuminate\Support\Facades\Log::error('Error al enviar correo: ' . $e->getMessage());
-        
+
         if ($request->ajax()) {
             return response()->json([
                 'success' => false,
                 'message' => 'No se pudo enviar el correo: ' . $e->getMessage()
             ], 500);
         }
-        
+
         return back()->with('error', 'No se pudo enviar el correo: ' . $e->getMessage());
     }
 })->name('payment.resend');
@@ -485,7 +486,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::get('pedidos/ver/{id}', [AdminPanelController::class, 'verPedido'])->name('pedidos.ver');
     Route::put('pedidos/actualizar-estado/{id}', [AdminPanelController::class, 'actualizarEstadoPedido'])->name('pedidos.actualizar-estado');
     Route::delete('pedidos/eliminar/{id}', [AdminPanelController::class, 'eliminarPedido'])->name('pedidos.eliminar');
-    
+
     // Reseñas
     Route::get('resenas', [App\Http\Controllers\Admin\ResenasController::class, 'index'])->name('resenas');
     Route::get('resenas/ver/{id}', [App\Http\Controllers\Admin\ResenasController::class, 'show'])->name('resenas.ver');
@@ -519,3 +520,12 @@ Route::get('/producto-test/{id}', function($id) {
         'timestamp' => time()
     ];
 });
+
+// Rutas para cambio de idioma
+Route::get('/language/{locale}', function ($locale) {
+    if (in_array($locale, ['es', 'en'])) {
+        session(['locale' => $locale]);
+        App::setLocale($locale);
+    }
+    return redirect()->back();
+})->name('language.switch');
