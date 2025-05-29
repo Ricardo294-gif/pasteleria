@@ -529,3 +529,15 @@ Route::get('/language/{locale}', function ($locale) {
     }
     return redirect()->back();
 })->name('language.switch');
+
+// Ruta de prueba para traducciones
+Route::get('/test-translations', function() {
+    return [
+        'current_locale' => app()->getLocale(),
+        'cart_title_es' => trans('app.cart.title', [], 'es'),
+        'cart_title_en' => trans('app.cart.title', [], 'en'),
+        'cart_title_current' => __('app.cart.title'),
+        'site_title' => __('app.site_title'),
+        'session_locale' => session('locale'),
+    ];
+});
