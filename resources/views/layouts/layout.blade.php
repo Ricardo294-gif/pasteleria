@@ -71,13 +71,40 @@
                     <li><a href="{{ route('index') }}#menu" class="{{ request()->routeIs('index') && request()->has('menu') ? 'active' : '' }}">Menú</a></li>
                     <li><a href="{{ route('index') }}#proceso" class="{{ request()->routeIs('index') && request()->has('proceso') ? 'active' : '' }}">Proceso</a></li>  
                     <li><a href="{{ route('index') }}#contact" class="{{ request()->routeIs('index') && request()->has('contact') ? 'active' : '' }}">Contacto</a></li>
-                    <li class="language-selector">
+                    @auth
+                        <li class="d-xl-none"><a href="{{ route('perfil') }}" class="{{ request()->routeIs('perfil') ? 'active' : '' }}">Mi Perfil</a></li>
+                        @if(auth()->user()->is_admin == 1)
+                            <li class="d-xl-none"><a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Panel de Administración</a></li>
+                        @endif
+                        <li class="d-xl-none">
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit">Cerrar sesión</button>
+                            </form>
+                        </li>
+                    @else
+                        <li class="d-xl-none">
+                            <a href="{{ route('login') }}" class="login-link">Iniciar Sesión</a>
+                        </li>
+                    @endauth
+                    <li class="mobile-only d-xl-none">
+                        <a href="{{ route('carrito.index') }}" class="sweet-cart-btn">
+                            <div class="cart-container">
+                                <div class="cart-icon-wrapper">
+                                    <i class="bi bi-cart3"></i>
+                                    <div class="cart-badge">
+                                        <span class="cart-count">0</span>
+                                    </div>
+                                </div>
+                                <div class="cart-text">Mi carrito</div>
+                            </div>
+                        </a>
                     </li>
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
 
-            <div class="d-flex align-items-center">
+            <div class="d-none d-xl-flex align-items-center">
                 @auth
                     <div class="dropdown me-3">
                         <button class="user-profile-btn" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -264,59 +291,6 @@
                 });
             }
         });
-
-        // Manejo del menú móvil
-        const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
-        const navMenu = document.querySelector('.navmenu');
-        const body = document.body;
-
-        if (mobileNavToggle && navMenu) {
-            mobileNavToggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                this.classList.toggle('bi-x');
-                this.classList.toggle('bi-list');
-                navMenu.classList.toggle('show');
-                body.classList.toggle('no-scroll');
-            });
-
-            // Cerrar menú al hacer clic en un enlace
-            const navLinks = navMenu.querySelectorAll('a');
-            navLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    navMenu.classList.remove('show');
-                    mobileNavToggle.classList.remove('bi-x');
-                    mobileNavToggle.classList.add('bi-list');
-                    body.classList.remove('no-scroll');
-                });
-            });
-
-            // Cerrar menú al hacer clic fuera
-            document.addEventListener('click', function(e) {
-                if (!navMenu.contains(e.target) && !mobileNavToggle.contains(e.target) && navMenu.classList.contains('show')) {
-                    navMenu.classList.remove('show');
-                    mobileNavToggle.classList.remove('bi-x');
-                    mobileNavToggle.classList.add('bi-list');
-                    body.classList.remove('no-scroll');
-                }
-            });
-        }
-
-        // Ajustar posición del dropdown en móviles
-        const userDropdown = document.getElementById('userDropdown');
-        if (userDropdown) {
-            const dropdownMenu = userDropdown.nextElementSibling;
-            
-            function adjustDropdownPosition() {
-                if (window.innerWidth <= 768) {
-                    dropdownMenu.style.maxHeight = (window.innerHeight * 0.8) + 'px';
-                } else {
-                    dropdownMenu.style.maxHeight = '';
-                }
-            }
-
-            window.addEventListener('resize', adjustDropdownPosition);
-            adjustDropdownPosition();
-        }
     </script>
 
     <style>
@@ -668,161 +642,211 @@
             }
         }
 
-        /* Estilos responsivos para móviles */
-        @media (max-width: 768px) {
-            /* Header y navegación */
-            .header {
-                padding: 10px 0;
+        /* Estilos para el menú móvil */
+        @media (max-width: 1199px) {
+            .logo {
+                margin-left: 20px;
             }
 
-            .container {
-                padding: 0 15px;
+            .login-link {
+                display: block;
+                padding: 12px 25px !important;
+                margin: 15px 0;
+                color: #fff !important;
+                background-color: #ff7070;
+                border-radius: 30px;
+                text-align: center;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                text-decoration: none;
             }
 
-            .logo h1.sitename {
-                font-size: 1.5rem !important;
+            .login-link:hover {
+                background-color: #ff5050;
+                transform: translateY(-2px);
             }
 
-            .logo h1.sitename span {
-                font-size: 1.5rem !important;
+            [data-theme="dark"] .login-link {
+                background-color: #ff7070;
+                color: #fff !important;
             }
 
-            .logo img {
-                max-height: 40px;
+            [data-theme="dark"] .login-link:hover {
+                background-color: #ff5050;
             }
 
-            /* Menú móvil */
             .navmenu {
                 position: fixed;
                 top: 0;
                 right: -100%;
-                width: 80%;
-                max-width: 300px;
+                width: 100%;
                 height: 100vh;
-                background: var(--background-color);
-                padding: 60px 20px;
+                background: var(--body-bg);
+                padding: 60px 20px 20px;
                 transition: 0.3s;
                 z-index: 999;
-                box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
                 overflow-y: auto;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+            }
+
+            .sitename {
+                margin-left: 10px;
             }
 
             .navmenu.show {
                 right: 0;
             }
 
-            .navmenu ul {
+            .nav-links {
                 flex-direction: column;
+                align-items: flex-start;
                 padding: 0;
-                margin: 0;
             }
 
-            .navmenu ul li {
-                margin: 10px 0;
+            .nav-links li {
+                width: 100%;
+                margin: 5px 0;
             }
 
-            .navmenu ul li a {
-                font-size: 1.1rem;
-                padding: 10px 0;
+            .navmenu ul {
+                padding: 10px 30px 10px 30px;
+            }
+
+            .nav-links li a {
+                padding: 15px 0;
                 display: block;
+                width: 100%;
+                font-size: 1.1rem;
             }
 
-            /* Botón de menú móvil */
-            .mobile-nav-toggle {
-                display: block !important;
-                position: fixed;
-                right: 15px;
-                top: 20px;
-                z-index: 1000;
-                font-size: 24px;
+            .nav-links li a i {
+                margin-right: 10px;
+                font-size: 1.2rem;
+                color: #ff7070;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links li a:hover i {
+                transform: translateX(3px);
+            }
+
+            .nav-links li button {
+                padding: 15px 0;
+                display: block;
+                width: 100%;
+                font-size: 1.1rem;
+                color: #212529;
+                transition: all 0.3s ease;
+                background: none;
+                border: none;
+                box-shadow: none;
+                text-align: left;
+                font-family: inherit;
                 cursor: pointer;
+            }
+
+            .nav-links li button:hover,
+            .nav-links li button:focus {
+                color: #ff7070;
+                box-shadow: none;
+                outline: none;
+            }
+
+            .nav-links li form {
+                margin: 0;
+                padding: 0;
+            }
+
+            @media (min-width: 1200px) {
+                .nav-links li a i {
+                    font-size: 1rem;
+                }
+            }
+
+            .mobile-nav-toggle {
+                position: fixed;
+                top: 23px;
+                right: 20px;
+                font-size: 2rem;
+                cursor: pointer;
+                z-index: 1000;
                 color: var(--text-color);
             }
 
-            /* Carrito y perfil de usuario */
-            .cart-text {
-                display: none;
+            .mobile-only {
+                border-top: 1px solid rgba(255, 112, 112, 0.1);
+                margin-top: 15px;
+                padding-top: 15px;
             }
 
-            .cart-icon-wrapper {
-                margin-right: 0;
-            }
-
-            .cart-container {
-                padding: 3px;
-                margin-left: -10px;
-                margin-right: 30px;
-            }
-
-            .cart-icon-wrapper i {
-                font-size: 1.5rem;
-            }
-
-            .cart-badge {
-                width: 18px;
-                height: 18px;
-                font-size: 0.8rem;
-            }
-
-            .profile-icon-wrapper {
-                width: 35px;
-                height: 35px;
-            }
-
-            .profile-icon-wrapper i {
-                font-size: 1.2rem;
-            }
-
-            /* Dropdown del perfil */
-            .dropdown-menu.profile-dropdown {
-                position: fixed !important;
-                top: auto !important;
-                bottom: 0 !important;
-                left: 0 !important;
+            .mobile-only .sweet-cart-btn,
+            .mobile-only .btn-proceso {
                 width: 100%;
+                justify-content: flex-start;
+                margin: 10px 0;
+            }
+
+            .mobile-only .dropdown {
+                width: 100%;
+            }
+
+            .mobile-only .user-profile-btn {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                padding: 10px 0;
+            }
+
+            .mobile-only .profile-icon-wrapper {
+                margin-right: 15px;
+            }
+
+            .mobile-only .cart-container {
+                justify-content: flex-start;
+            }
+
+            .mobile-only .dropdown-menu {
+                position: static !important;
+                width: 100%;
+                transform: none !important;
+                box-shadow: none;
+                border: 1px solid rgba(255, 112, 112, 0.1);
+            }
+
+            .nav-links li button {
+                box-shadow: none !important;
+                transform: none !important;
+            }
+
+            .mobile-only .btn-proceso {
+                background: none;
+                color: #212529;
+                padding: 15px 0;
+                border: none;
+                box-shadow: none;
+                font-size: 1.1rem;
                 margin: 0;
-                border-radius: 15px 15px 0 0;
-                transform: translateY(100%) !important;
-                transition: transform 0.3s ease-in-out !important;
+                transition: all 0.3s ease;
             }
 
-            .dropdown-menu.show.profile-dropdown {
-                transform: translateY(0) !important;
+            .mobile-only .btn-proceso:hover {
+                color: #ff7070;
+                background: none;
+                transform: none;
+                box-shadow: none;
             }
 
-            /* Botón de tema */
-            .theme-toggle-btn {
-                bottom: 20px;
-                right: 20px;
-                width: 40px;
-                height: 40px;
+            [data-theme="dark"] .nav-links li button,
+            [data-theme="dark"] .mobile-only .btn-proceso,
+            [data-theme="dark"] .nav-links li a {
+                color: #fff;
             }
 
-            /* Ajustes de espaciado general */
-            .d-flex.align-items-center {
-                gap: 10px;
+            [data-theme="dark"] .nav-links li button:hover,
+            [data-theme="dark"] .mobile-only .btn-proceso:hover,
+            [data-theme="dark"] .nav-links li a:hover {
+                color: #ff7070;
             }
-        }
-
-        /* Ajustes para pantallas muy pequeñas */
-        @media (max-width: 375px) {
-            .logo h1.sitename, 
-            .logo h1.sitename span {
-                font-size: 1.2rem !important;
-            }
-
-            .cart-text {
-                display: none;
-            }
-
-            .cart-icon-wrapper {
-                margin-right: 0;
-            }
-        }
-
-        /* Estilo adicional para prevenir scroll cuando el menú está abierto */
-        body.no-scroll {
-            overflow: hidden;
         }
     </style>
 
@@ -833,41 +857,65 @@
             const htmlElement = document.documentElement;
             const themeIcon = themeToggleBtn.querySelector('i');
             
-            // Comprobar si hay una preferencia guardada
+            // Control del menú móvil
+            const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+            const navMenu = document.querySelector('.navmenu');
+            const body = document.body;
+
+            if (mobileNavToggle && navMenu) {
+                mobileNavToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('show');
+                    body.style.overflow = navMenu.classList.contains('show') ? 'hidden' : '';
+                    
+                    // Cambiar el ícono del botón
+                    this.classList.toggle('bi-list');
+                    this.classList.toggle('bi-x');
+                });
+
+                // Cerrar menú al hacer clic en un enlace
+                const navLinks = navMenu.querySelectorAll('a');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('show');
+                        body.style.overflow = '';
+                        mobileNavToggle.classList.add('bi-list');
+                        mobileNavToggle.classList.remove('bi-x');
+                    });
+                });
+
+                // Cerrar menú al hacer clic fuera
+                document.addEventListener('click', function(e) {
+                    if (!navMenu.contains(e.target) && !mobileNavToggle.contains(e.target) && navMenu.classList.contains('show')) {
+                        navMenu.classList.remove('show');
+                        body.style.overflow = '';
+                        mobileNavToggle.classList.add('bi-list');
+                        mobileNavToggle.classList.remove('bi-x');
+                    }
+                });
+            }
+
+            // Resto del código existente del tema
             const savedTheme = localStorage.getItem('theme') || 'light';
-            
-            // Aplicar el tema guardado
             applyTheme(savedTheme);
             
-            // Manejar clic en botón de cambio de tema
             themeToggleBtn.addEventListener('click', function() {
                 const currentTheme = htmlElement.getAttribute('data-theme');
                 const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                
                 applyTheme(newTheme);
-                
-                // Guardar preferencia
                 localStorage.setItem('theme', newTheme);
             });
             
-            // Función para aplicar el tema
             function applyTheme(theme) {
                 htmlElement.setAttribute('data-theme', theme);
-                
-                // Actualizar ícono del botón
                 if (theme === 'dark') {
                     themeIcon.classList.remove('bi-sun-fill');
                     themeIcon.classList.add('bi-moon-fill');
                     themeToggleBtn.title = "Cambiar a modo claro";
-                    
-                    // Cambiar favicon en modo oscuro
                     document.querySelector('link[rel="icon"]').href = "{{ asset('img/logo/img-ico.ico') }}";
                 } else {
                     themeIcon.classList.remove('bi-moon-fill');
                     themeIcon.classList.add('bi-sun-fill');
                     themeToggleBtn.title = "Cambiar a modo oscuro";
-                    
-                    // Restaurar favicon original
                     document.querySelector('link[rel="icon"]').href = "{{ asset('img/favicon.png') }}";
                 }
             }
