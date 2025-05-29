@@ -14,23 +14,21 @@ Este es un proyecto web de comercio electrónico desarrollado utilizando el fram
 
 ## Instalación
 
-1. Clona el repositorio:
+1. Clonar el repositorio:
 ```bash
 git clone [URL-del-repositorio]
+cd RicardoJustiniano_MiProyectoWeb
 ```
 
-2. Instala las dependencias de PHP:
+2. Instalar dependencias:
 ```bash
 composer install
+npm install
 ```
 
-3. Copia el archivo de configuración:
+3. Configurar entorno:
 ```bash
 cp .env.example .env
-```
-
-4. Genera la clave de la aplicación:
-```bash
 php artisan key:generate
 ```
 
@@ -44,17 +42,18 @@ DB_USERNAME=dulceadmin
 DB_PASSWORD=dulceadmin
 ```
 
-6. Ejecuta las migraciones:
+5. Ejecutar migraciones y seeders:
 ```bash
-php artisan migrate
+php artisan migrate --seed
 ```
 
-7. Inicia el servidor de desarrollo:
+6. Compilar assets y iniciar servidor:
 ```bash
+npm run build
 php artisan serve
 ```
 
-8. Este es el admin (Solo se puede comprar con un usuario normal):
+7. Este es el admin (Solo se puede comprar con un usuario normal):
 ```bash
 ricardo10justiniano@gmail.com 1234567890
 ```
