@@ -72,13 +72,6 @@
                     <li><a href="{{ route('index') }}#proceso" class="{{ request()->routeIs('index') && request()->has('proceso') ? 'active' : '' }}">Proceso</a></li>  
                     <li><a href="{{ route('index') }}#contact" class="{{ request()->routeIs('index') && request()->has('contact') ? 'active' : '' }}">Contacto</a></li>
                     <li class="language-selector">
-                        <div class="lang-item">
-                            <a href="#" class="nav-link {{ app()->getLocale() == 'es' ? 'active' : '' }}" data-language="es">ES</a>
-                        </div>
-                        <span class="language-divider">|</span>
-                        <div class="lang-item">
-                            <a href="#" class="nav-link {{ app()->getLocale() == 'en' ? 'active' : '' }}" data-language="en">EN</a>
-                        </div>
                     </li>
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
