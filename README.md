@@ -2,7 +2,7 @@
 
 ## Acerca del Proyecto
 
-Este es un proyecto web desarrollado utilizando el framework Laravel. El proyecto está diseñado para [aquí puedes especificar el propósito principal de tu proyecto].
+Este es un proyecto web de comercio electrónico desarrollado utilizando el framework Laravel. El proyecto está diseñado para gestionar una tienda en línea con un sistema completo de gestión de productos, usuarios, carrito de compras y panel de administración.
 
 ## Requisitos del Sistema
 
@@ -34,18 +34,38 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-5. Configura la base de datos en el archivo `.env`
+5. Configura la base de datos en el archivo `.env`:
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nombre_de_tu_base_de_datos
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_contraseña
+```
 
 6. Ejecuta las migraciones:
 ```bash
 php artisan migrate
 ```
 
+7. Inicia el servidor de desarrollo:
+```bash
+php artisan serve
+```
+
 ## Características Principales
 
-- [Lista de características principales de tu proyecto]
-- [Característica 2]
-- [Característica 3]
+- Sistema de autenticación completo con registro, login y recuperación de contraseña
+- Verificación de correo electrónico para nuevos usuarios
+- Catálogo de productos con búsqueda y filtrado
+- Sistema de carrito de compras con gestión de cantidades
+- Sistema de reseñas de productos
+- Panel de administración con:
+  - Gestión de productos (crear, editar, eliminar)
+  - Gestión de usuarios
+  - Gestión de pedidos
+  - Dashboard con estadísticas
 
 ## Estructura del Proyecto
 
@@ -55,6 +75,17 @@ El proyecto sigue la estructura estándar de Laravel, con algunas personalizacio
 - `resources/` - Vistas, assets y archivos de frontend
 - `routes/` - Definición de rutas
 - `database/` - Migraciones y seeders
+- `public/` - Archivos públicos y assets
+- `storage/` - Archivos subidos y logs
+
+## Rutas Principales
+
+- `/` - Página principal
+- `/login` - Inicio de sesión
+- `/register` - Registro de usuarios
+- `/producto/{id}` - Detalles de producto
+- `/carrito` - Carrito de compras
+- `/admin/*` - Panel de administración (requiere autenticación como admin)
 
 ## Tecnologías Utilizadas
 
@@ -62,7 +93,9 @@ El proyecto sigue la estructura estándar de Laravel, con algunas personalizacio
 - MySQL
 - Bootstrap 5
 - JavaScript/jQuery
-- [Otras tecnologías específicas de tu proyecto]
+- Sistema de autenticación personalizado
+- Blade Template Engine
+- AJAX para interacciones dinámicas
 
 ## Autor
 
