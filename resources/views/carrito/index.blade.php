@@ -85,19 +85,19 @@
                                                     @endif
                                                 </span>
                                         </div>
-                                    </div>
+                                            </div>
 
                                     <!-- Controles de cantidad -->
                                     <div class="col-6 col-md-3 mt-3 mt-md-0">
                                         <div style="display: flex; align-items: center; justify-content: center;">
                                             <div style="display: flex; align-items: center; background-color: #f5f5f5; border-radius: 4px; padding: 5px 10px;">
                                                 <button class="btn-decrementar" data-id="{{ $item['id'] }}" style="width: 30px; height: 30px; border-radius: 50%; border: none; background-color: white; color: #666; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                                    <i class="bi bi-dash"></i>
-                                                </button>
+                                                            <i class="bi bi-dash"></i>
+                                                        </button>
                                                 <span class="cantidad-producto" style="padding: 0 15px; font-weight: 600; color: #333; min-width: 40px; text-align: center;">{{ $item['cantidad'] }}</span>
                                                 <button class="btn-incrementar" data-id="{{ $item['id'] }}" style="width: 30px; height: 30px; border-radius: 50%; border: none; background-color: white; color: #666; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                                    <i class="bi bi-plus"></i>
-                                                </button>
+                                                            <i class="bi bi-plus"></i>
+                                                        </button>
                                             </div>
                                         </div>
                                     </div>
@@ -109,10 +109,10 @@
                                         </div>
                                         <button type="button" class="btn-eliminar" data-id="{{ $item['id'] }}" style="background-color: #ff7070; color: white; border: none; border-radius: 10px; padding: 5px 15px; font-size: 0.9rem; transition: all 0.3s ease;">
                                             <i class="bi bi-trash me-1"></i> Eliminar
-                                        </button>
+                                                </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             @endforeach
                     </div>
 
@@ -161,7 +161,7 @@
                     <p style="color: #888; margin-bottom: 30px;">Aún no has añadido productos a tu carrito</p>
                     <a href="{{ route('index') }}" style="display: inline-block; background-color: #ff7070; color: white; border-radius: 10px; padding: 12px 25px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(255, 112, 112, 0.2);">
                         <i class="bi bi-shop me-2"></i> Ir al menú de productos
-                    </a>
+                        </a>
                 </div>
             @endif
         </div>

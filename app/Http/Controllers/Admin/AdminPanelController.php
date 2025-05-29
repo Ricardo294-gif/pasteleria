@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Compra;
 use App\Models\User;
 use App\Models\Producto;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class AdminPanelController extends Controller
 {
@@ -211,6 +213,230 @@ class AdminPanelController extends Controller
             Log::error('Error al ver pedido: ' . $e->getMessage());
             return redirect()->route('admin.pedidos')
                 ->with('error', 'No se pudo encontrar el pedido especificado.');
+        }
+    }
+
+    /**
+     * Mostrar la lista de usuarios
+     */
+    public function usuarios(Request $request)
+    {
+        try {
+            $query = User::query();
+
+            // Aplicar búsqueda si existe
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                      ->orWhere('email', 'LIKE', "%{$search}%");
+                });
+            }
+
+            // Ordenar usuarios
+            $query->orderBy('created_at', 'desc');
+
+            // Paginar resultados
+            $usuarios = $query->paginate(10)->withQueryString();
+
+            return view('admin.usuarios.index', compact('usuarios'));
+        } catch (\Exception $e) {
+            Log::error('Error en la lista de usuarios: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al cargar la lista de usuarios: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Mostrar la lista de productos
+     */
+    public function productos(Request $request)
+    {
+        try {
+            $query = Producto::with('categoria');
+
+            // Aplicar búsqueda si existe
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('nombre', 'LIKE', "%{$search}%")
+                      ->orWhere('descripcion', 'LIKE', "%{$search}%")
+                      ->orWhereHas('categoria', function($q) use ($search) {
+                          $q->where('nombre', 'LIKE', "%{$search}%");
+                      });
+                });
+            }
+
+            // Aplicar filtro por categoría si existe
+            if ($request->has('categoria_id') && $request->categoria_id != 'todas') {
+                $query->where('categoria_id', $request->categoria_id);
+            }
+
+            // Ordenar productos
+            $query->orderBy('created_at', 'desc');
+
+            // Paginar resultados (10 por página)
+            $productos = $query->paginate(10)->withQueryString();
+
+            // Obtener todas las categorías para el filtro
+            $categorias = Categoria::orderBy('nombre')->get();
+
+            return view('admin.productos.index', compact('productos', 'categorias'));
+        } catch (\Exception $e) {
+            Log::error('Error en la lista de productos: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al cargar la lista de productos: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Mostrar el formulario para crear un nuevo producto
+     */
+    public function crearProducto()
+    {
+        $categorias = Categoria::orderBy('nombre')->get();
+        return view('admin.productos.crear', compact('categorias'));
+    }
+
+    /**
+     * Guardar un nuevo producto
+     */
+    public function guardarProducto(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'precio' => 'required|numeric|min:0',
+            'categoria_id' => 'required|exists:categorias,id',
+            'imagen' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Procesar la imagen
+            if ($request->hasFile('imagen')) {
+                $imagen = $request->file('imagen');
+                $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
+                $imagen->move(public_path('img/productos'), $nombreImagen);
+            }
+
+            // Crear el producto
+            Producto::create([
+                'nombre' => $request->nombre,
+                'descripcion' => $request->descripcion,
+                'precio' => $request->precio,
+                'categoria_id' => $request->categoria_id,
+                'imagen' => $nombreImagen ?? null
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('admin.productos')
+                ->with('success', 'Producto creado correctamente');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error al crear producto: ' . $e->getMessage());
+            
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error al crear el producto: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Mostrar el formulario para editar un producto
+     */
+    public function editarProducto($id)
+    {
+        try {
+            $producto = Producto::findOrFail($id);
+            $categorias = Categoria::orderBy('nombre')->get();
+            return view('admin.productos.editar', compact('producto', 'categorias'));
+        } catch (\Exception $e) {
+            Log::error('Error al cargar producto para editar: ' . $e->getMessage());
+            return redirect()->route('admin.productos')
+                ->with('error', 'No se pudo encontrar el producto especificado.');
+        }
+    }
+
+    /**
+     * Actualizar un producto existente
+     */
+    public function actualizarProducto(Request $request, $id)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'precio' => 'required|numeric|min:0',
+            'categoria_id' => 'required|exists:categorias,id',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $producto = Producto::findOrFail($id);
+            
+            // Procesar la imagen si se proporcionó una nueva
+            if ($request->hasFile('imagen')) {
+                // Eliminar la imagen anterior si existe
+                if ($producto->imagen && file_exists(public_path('img/productos/' . $producto->imagen))) {
+                    unlink(public_path('img/productos/' . $producto->imagen));
+                }
+
+                $imagen = $request->file('imagen');
+                $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
+                $imagen->move(public_path('img/productos'), $nombreImagen);
+                $producto->imagen = $nombreImagen;
+            }
+
+            // Actualizar otros campos
+            $producto->nombre = $request->nombre;
+            $producto->descripcion = $request->descripcion;
+            $producto->precio = $request->precio;
+            $producto->categoria_id = $request->categoria_id;
+            $producto->save();
+
+            DB::commit();
+
+            return redirect()->route('admin.productos')
+                ->with('success', 'Producto actualizado correctamente');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error al actualizar producto: ' . $e->getMessage());
+            
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error al actualizar el producto: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Eliminar un producto
+     */
+    public function eliminarProducto($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $producto = Producto::findOrFail($id);
+            
+            // Eliminar la imagen si existe
+            if ($producto->imagen && file_exists(public_path('img/productos/' . $producto->imagen))) {
+                unlink(public_path('img/productos/' . $producto->imagen));
+            }
+
+            $producto->delete();
+
+            DB::commit();
+
+            return redirect()->route('admin.productos')
+                ->with('success', 'Producto eliminado correctamente');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error al eliminar producto: ' . $e->getMessage());
+            
+            return redirect()->back()
+                ->with('error', 'Error al eliminar el producto: ' . $e->getMessage());
         }
     }
 } 

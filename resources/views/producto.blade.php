@@ -69,18 +69,18 @@
                                 
                                 <div class="ms-3">
                                     <div class="rating-container">
-                                        <span class="text-warning" style="font-size: 1.2rem; padding: 5px 10px; border-radius: 16px; display: inline-block;">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($i <= round($producto->getAverageRatingAttribute()))
-                                                    <i class="bi bi-star-fill"></i>
-                                                @else
-                                                    <i class="bi bi-star"></i>
-                                                @endif
-                                            @endfor
-                                        </span>
+                                    <span class="text-warning" style="font-size: 1.2rem; padding: 5px 10px; border-radius: 16px; display: inline-block;">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= round($producto->getAverageRatingAttribute()))
+                                        <i class="bi bi-star-fill"></i>
+                                            @else
+                                                <i class="bi bi-star"></i>
+                                            @endif
+                                        @endfor
+                                    </span>
                                         <span class="text-muted" style="font-weight: 600; color: #666666; font-size: 0.85rem;">({{ $producto->getReviewsCountAttribute() }} opiniones)</span>
                                     </div>
-                                </div>
+                        </div>
                             </div>
                             </div>
 

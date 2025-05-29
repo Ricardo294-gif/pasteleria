@@ -36,33 +36,24 @@
             </a>
             <div class="search-container position-relative">
                 <i class="bi bi-search search-icon"></i>
-                <input type="text" id="table-responsive" class="form-control" placeholder="Buscar producto...">
+                <input type="text" id="searchInput" class="form-control" placeholder="Buscar producto...">
             </div>
         </div>
     </div>
     <div class="card-body">
-        <ul class="nav nav-pills filter-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="tab" data-category="all" href="javascript:void(0)">
-                    Todos
-                </a>
-            </li>
-            @foreach($categorias as $categoria)
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" data-category="{{ $categoria->nombre }}" href="javascript:void(0)">
-                    {{ $categoria->nombre }}
-                </a>
-            </li>
-            @endforeach
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" data-category="Sin categoría" href="javascript:void(0)">
-                    Sin categoría
-                </a>
-            </li>
-        </ul>
+        <!-- Filtro de categorías -->
+        <div class="mb-4">
+            <label for="categoriaFilter" class="form-label">Filtrar por categoría:</label>
+            <select class="form-select" id="categoriaFilter">
+                <option value="">Todas las categorías</option>
+                @foreach($categorias as $categoria)
+                    <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                @endforeach
+            </select>
+        </div>
 
         <div class="table-responsive">
-            <table class="table table-striped mt-4">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Imagen</th>
@@ -74,76 +65,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        $productosUnicos = collect($productos)->unique('id');
-                    @endphp
-                    @foreach($productosUnicos as $producto)
-                    <tr data-category="{{ $producto->categoria ? $producto->categoria->nombre : 'Sin categoría' }}">
+                    @foreach($productos as $producto)
+                    <tr data-categoria-id="{{ $producto->categoria_id ?? '' }}">
                         <td>
-                            <img src="{{ asset(file_exists(public_path('storage/' . $producto->imagen)) ? 'storage/' . $producto->imagen : (file_exists(public_path('img/productos/' . $producto->imagen)) ? 'img/productos/' . $producto->imagen : 'img/productos/default.jpg')) }}" 
+                            <img src="{{ asset('img/productos/' . ($producto->imagen ?? 'default.jpg')) }}" 
                                 alt="{{ $producto->nombre }}" 
-                                class="admin-thumbnail" 
-                                style="max-width: 100px; height: auto; object-fit: cover;">
+                                class="img-thumbnail"
+                                style="max-width: 100px;">
                         </td>
-                        <td class="align-middle">{{ $producto->nombre }}</td>
-                        <td class="align-middle">{{ \Illuminate\Support\Str::limit($producto->descripcion, 50, '...') }}</td>
-                        <td class="align-middle">{{ $producto->precio }} €</td>
-                        <td class="align-middle">{{ $producto->categoria ? $producto->categoria->nombre : 'Sin categoría' }}</td>
-                        <td class="align-middle">
-                            <a href="{{ route('admin.productos.editar', $producto->id) }}" class="btn admin-action-btn edit" title="Editar">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
-                            <button type="button" class="btn btn-link admin-action-btn delete" title="Eliminar" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $producto->id }}">
-                                <i class="bi bi-trash"></i>
-                            </button>
-
-                            <!-- Modal de confirmación para eliminar -->
-                            <div class="modal fade" id="deleteModal{{ $producto->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $producto->id }}" aria-hidden="true" data-bs-backdrop="static">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content border-0 shadow">
-                                        <div class="modal-header bg-danger text-white">
-                                            <h5 class="modal-title" id="deleteModalLabel{{ $producto->id }}">
-                                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                                Confirmar eliminación
-                                            </h5>
-                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="text-center mb-3">
-                                                <img src="{{ asset(file_exists(public_path('storage/' . $producto->imagen)) ? 'storage/' . $producto->imagen : (file_exists(public_path('img/productos/' . $producto->imagen)) ? 'img/productos/' . $producto->imagen : 'img/productos/default.jpg')) }}" 
-                                                    alt="{{ $producto->nombre }}" 
-                                                    style="max-height: 100px; max-width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                                            </div>
-                                            <p class="text-center fs-5 mb-3">{{ $producto->nombre }}</p>
-                                            <div class="row mb-3">
-                                                <div class="col-6">
-                                                    <p class="mb-1"><strong>ID:</strong> {{ $producto->id }}</p>
-                                                    <p class="mb-1"><strong>Precio:</strong> {{ $producto->precio }} €</p>
-                                                </div>
-                                                <div class="col-6">
-                                                    <p class="mb-1"><strong>Categoría:</strong> {{ $producto->categoria ? $producto->categoria->nombre : 'Sin categoría' }}</p>
-                                                </div>
-                                            </div>
-                                            <p>¿Estás seguro de que deseas eliminar este producto?</p>
-                                            <div class="alert alert-warning">
-                                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                                <strong>Advertencia:</strong> Esta acción no se puede deshacer y eliminará permanentemente este producto del catálogo.
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer justify-content-center gap-2">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                <i class="bi bi-x-circle me-1"></i>Cancelar
-                                            </button>
-                                            <form action="{{ route('admin.productos.eliminar', $producto->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">
-                                                    <i class="bi bi-trash me-1"></i>Sí, eliminar
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                        <td>{{ $producto->nombre }}</td>
+                        <td>{{ \Illuminate\Support\Str::limit($producto->descripcion, 100) }}</td>
+                        <td>€{{ number_format($producto->precio, 2) }}</td>
+                        <td>{{ optional($producto->categoria)->nombre ?? 'Sin categoría' }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{{ route('admin.productos.editar', $producto->id) }}" class="btn btn-link admin-action-btn edit" title="Editar">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <form class="delete-form m-0" action="{{ route('admin.productos.eliminar', $producto->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-link admin-action-btn delete" title="Eliminar" onclick="confirmarEliminacion(this.form, '{{ $producto->nombre }}')">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -151,65 +96,77 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Paginación -->
+        <div class="d-flex justify-content-center mt-4">
+            {{ $productos->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
+        </div>
     </div>
 </div>
+
 @endsection
 
 @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Auto-cerrar alertas después de 5 segundos
-            const alerts = document.querySelectorAll('.floating-alert');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    if (alert) {
-                        const bsAlert = new bootstrap.Alert(alert);
-                        bsAlert.close();
-                    }
-                }, 5000);
-            });
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const categoriaFilter = document.getElementById('categoriaFilter');
+    const tableRows = document.querySelectorAll('tbody tr');
 
-            // Código existente para filtrado
-            const searchInput = document.getElementById('table-responsive');
-            const categoryLinks = document.querySelectorAll('.nav-link[data-category]');
-            const tableRows = document.querySelectorAll('tbody tr');
-            let currentCategory = 'all';
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedCategoria = categoriaFilter.value;
 
-            // Función para filtrar productos
-            function filterProducts() {
-                const searchTerm = searchInput.value.toLowerCase();
-                
-                tableRows.forEach(row => {
-                    const productName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                    const productDescription = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-                    const productCategory = row.getAttribute('data-category');
-                    
-                    const matchesSearch = productName.includes(searchTerm) || productDescription.includes(searchTerm);
-                    const matchesCategory = currentCategory === 'all' || productCategory === currentCategory;
-                    
-                    row.style.display = matchesSearch && matchesCategory ? '' : 'none';
-                });
-            }
+        tableRows.forEach(row => {
+            const nombre = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            const descripcion = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+            const categoriaId = row.getAttribute('data-categoria-id');
 
-            // Event listener para la búsqueda
-            searchInput.addEventListener('input', filterProducts);
+            const matchesSearch = nombre.includes(searchTerm) || descripcion.includes(searchTerm);
+            const matchesCategoria = !selectedCategoria || categoriaId === selectedCategoria;
 
-            // Event listeners para los filtros de categoría
-            categoryLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    // Actualizar clases activas
-                    categoryLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-
-                    // Actualizar categoría actual y filtrar
-                    currentCategory = this.getAttribute('data-category');
-                    filterProducts();
-                });
-            });
+            row.style.display = matchesSearch && matchesCategoria ? '' : 'none';
         });
-    </script>
+    }
+
+    searchInput.addEventListener('input', filterTable);
+    categoriaFilter.addEventListener('change', filterTable);
+
+    // Auto-cerrar alertas
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.classList.remove('show');
+            setTimeout(() => alert.remove(), 150);
+        }, 3000);
+    });
+});
+
+function confirmarEliminacion(form, nombreProducto) {
+    Swal.fire({
+        title: '¿Eliminar producto?',
+        html: `¿Estás seguro de que deseas eliminar el producto "${nombreProducto}"?<br><br>Esta acción no se puede deshacer.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ff7070',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true,
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-title',
+            htmlContainer: 'swal-text',
+            confirmButton: 'swal-confirm',
+            cancelButton: 'swal-cancel'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit();
+        }
+    });
+}
+</script>
 @endpush
 
 <style>
@@ -315,15 +272,45 @@
 .admin-action-btn {
     color: #6c757d;
     transition: color 0.3s ease;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
 }
 
 .admin-action-btn:hover {
     color: #ff7070 !important;
     background: none !important;
+    text-decoration: none;
 }
 
 .admin-action-btn.edit:hover {
     color: #ff7070 !important;
+}
+
+.admin-action-btn.delete:hover {
+    color: #dc3545 !important;
+}
+
+.admin-action-btn i {
+    font-size: 1.1rem;
+}
+
+/* Eliminar estilos de botón por defecto */
+.btn-link {
+    text-decoration: none;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.btn-link:focus {
+    box-shadow: none;
+}
+
+.delete-form {
+    margin: 0;
+    padding: 0;
+    display: inline;
 }
 
 /* Estilos para el input de búsqueda */
@@ -353,5 +340,39 @@
 
 .table tr {
     line-height: 1.2;
+}
+
+/* Estilos para la paginación */
+.pagination {
+    margin-bottom: 0;
+}
+
+.pagination .page-item .page-link {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border: 1px solid #dee2e6;
+    margin: 0 2px;
+    color: #ff7070;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #ff7070;
+    border-color: #ff7070;
+    color: white;
+}
+
+.pagination .page-item .page-link:hover {
+    color: #ff5555;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+    text-decoration: none;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6;
 }
 </style>

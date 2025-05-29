@@ -129,6 +129,40 @@
         box-shadow: 0 0 0 0.2rem rgba(255, 112, 112, 0.25);
         border-color: #ff7070;
     }
+
+    /* Estilos para la paginación */
+    .pagination {
+        margin-bottom: 0;
+    }
+
+    .pagination .page-item .page-link {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        border: 1px solid #dee2e6;
+        margin: 0 2px;
+        color: #ff7070;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #ff7070;
+        border-color: #ff7070;
+        color: white;
+    }
+
+    .pagination .page-item .page-link:hover {
+        color: #ff5555;
+        background-color: #e9ecef;
+        border-color: #dee2e6;
+        text-decoration: none;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #fff;
+        border-color: #dee2e6;
+    }
 </style>
 
 <div class="page-header">
@@ -267,12 +301,12 @@
                 </tbody>
             </table>
         </div>
-    </div>
-</div>
 
-<!-- Paginación -->
-<div class="d-flex justify-content-center ps-3">
-    {{ $resenas->onEachSide(1)->appends(['search' => $search, 'filter' => $filter])->links('vendor.pagination.bootstrap-5') }}
+        <!-- Paginación -->
+        <div class="d-flex justify-content-center mt-4">
+            {{ $resenas->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
+        </div>
+    </div>
 </div>
 
 @push('scripts')

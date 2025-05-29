@@ -564,7 +564,7 @@
                                 </div>
                             @endforeach
                             <div class="mt-3 text-end">
-                                <a href="{{ route('admin.pedidos') }}" class="btn btn-sm btn-outline-primary">
+                                <a href="{{ route('admin.pedidos') }}" class="btn btn-sm btn-outline-secondary">
                                     Ver todos los pedidos <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
