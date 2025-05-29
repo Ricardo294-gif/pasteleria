@@ -264,6 +264,59 @@
                 });
             }
         });
+
+        // Manejo del menú móvil
+        const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+        const navMenu = document.querySelector('.navmenu');
+        const body = document.body;
+
+        if (mobileNavToggle && navMenu) {
+            mobileNavToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                this.classList.toggle('bi-x');
+                this.classList.toggle('bi-list');
+                navMenu.classList.toggle('show');
+                body.classList.toggle('no-scroll');
+            });
+
+            // Cerrar menú al hacer clic en un enlace
+            const navLinks = navMenu.querySelectorAll('a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('show');
+                    mobileNavToggle.classList.remove('bi-x');
+                    mobileNavToggle.classList.add('bi-list');
+                    body.classList.remove('no-scroll');
+                });
+            });
+
+            // Cerrar menú al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (!navMenu.contains(e.target) && !mobileNavToggle.contains(e.target) && navMenu.classList.contains('show')) {
+                    navMenu.classList.remove('show');
+                    mobileNavToggle.classList.remove('bi-x');
+                    mobileNavToggle.classList.add('bi-list');
+                    body.classList.remove('no-scroll');
+                }
+            });
+        }
+
+        // Ajustar posición del dropdown en móviles
+        const userDropdown = document.getElementById('userDropdown');
+        if (userDropdown) {
+            const dropdownMenu = userDropdown.nextElementSibling;
+            
+            function adjustDropdownPosition() {
+                if (window.innerWidth <= 768) {
+                    dropdownMenu.style.maxHeight = (window.innerHeight * 0.8) + 'px';
+                } else {
+                    dropdownMenu.style.maxHeight = '';
+                }
+            }
+
+            window.addEventListener('resize', adjustDropdownPosition);
+            adjustDropdownPosition();
+        }
     </script>
 
     <style>
@@ -613,6 +666,163 @@
                 justify-content: center;
                 padding: 10px 0;
             }
+        }
+
+        /* Estilos responsivos para móviles */
+        @media (max-width: 768px) {
+            /* Header y navegación */
+            .header {
+                padding: 10px 0;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .logo h1.sitename {
+                font-size: 1.5rem !important;
+            }
+
+            .logo h1.sitename span {
+                font-size: 1.5rem !important;
+            }
+
+            .logo img {
+                max-height: 40px;
+            }
+
+            /* Menú móvil */
+            .navmenu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                max-width: 300px;
+                height: 100vh;
+                background: var(--background-color);
+                padding: 60px 20px;
+                transition: 0.3s;
+                z-index: 999;
+                box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+                overflow-y: auto;
+            }
+
+            .navmenu.show {
+                right: 0;
+            }
+
+            .navmenu ul {
+                flex-direction: column;
+                padding: 0;
+                margin: 0;
+            }
+
+            .navmenu ul li {
+                margin: 10px 0;
+            }
+
+            .navmenu ul li a {
+                font-size: 1.1rem;
+                padding: 10px 0;
+                display: block;
+            }
+
+            /* Botón de menú móvil */
+            .mobile-nav-toggle {
+                display: block !important;
+                position: fixed;
+                right: 15px;
+                top: 20px;
+                z-index: 1000;
+                font-size: 24px;
+                cursor: pointer;
+                color: var(--text-color);
+            }
+
+            /* Carrito y perfil de usuario */
+            .cart-text {
+                display: none;
+            }
+
+            .cart-icon-wrapper {
+                margin-right: 0;
+            }
+
+            .cart-container {
+                padding: 3px;
+                margin-left: -10px;
+                margin-right: 30px;
+            }
+
+            .cart-icon-wrapper i {
+                font-size: 1.5rem;
+            }
+
+            .cart-badge {
+                width: 18px;
+                height: 18px;
+                font-size: 0.8rem;
+            }
+
+            .profile-icon-wrapper {
+                width: 35px;
+                height: 35px;
+            }
+
+            .profile-icon-wrapper i {
+                font-size: 1.2rem;
+            }
+
+            /* Dropdown del perfil */
+            .dropdown-menu.profile-dropdown {
+                position: fixed !important;
+                top: auto !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                width: 100%;
+                margin: 0;
+                border-radius: 15px 15px 0 0;
+                transform: translateY(100%) !important;
+                transition: transform 0.3s ease-in-out !important;
+            }
+
+            .dropdown-menu.show.profile-dropdown {
+                transform: translateY(0) !important;
+            }
+
+            /* Botón de tema */
+            .theme-toggle-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+            }
+
+            /* Ajustes de espaciado general */
+            .d-flex.align-items-center {
+                gap: 10px;
+            }
+        }
+
+        /* Ajustes para pantallas muy pequeñas */
+        @media (max-width: 375px) {
+            .logo h1.sitename, 
+            .logo h1.sitename span {
+                font-size: 1.2rem !important;
+            }
+
+            .cart-text {
+                display: none;
+            }
+
+            .cart-icon-wrapper {
+                margin-right: 0;
+            }
+        }
+
+        /* Estilo adicional para prevenir scroll cuando el menú está abierto */
+        body.no-scroll {
+            overflow: hidden;
         }
     </style>
 
