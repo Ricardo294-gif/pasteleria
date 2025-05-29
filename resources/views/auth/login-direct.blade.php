@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ app()->getLocale() }}" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Mi Sueño Dulce</title>
+    <title>{{ __('app.auth.login.title') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
@@ -417,15 +417,97 @@
         .theme-toggle-btn i {
             font-size: 1.2rem;
         }
+
+        /* Selector de idiomas */
+        .language-selector {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #fff;
+            padding: 8px 12px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        [data-theme="dark"] .language-selector {
+            background-color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        .lang-link {
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lang-link:hover {
+            color: #ff7070;
+            background-color: rgba(255, 112, 112, 0.1);
+        }
+
+        .lang-link.active {
+            color: #ff7070;
+            background-color: rgba(255, 112, 112, 0.15);
+            font-weight: 700;
+        }
+
+        .language-divider {
+            color: #ccc;
+            font-weight: 300;
+            user-select: none;
+        }
+
+        [data-theme="dark"] .lang-link {
+            color: #ccc;
+        }
+
+        [data-theme="dark"] .lang-link:hover {
+            color: #ff7070;
+            background-color: rgba(255, 112, 112, 0.1);
+        }
+
+        [data-theme="dark"] .lang-link.active {
+            color: #ff7070;
+            background-color: rgba(255, 112, 112, 0.15);
+        }
+
+        [data-theme="dark"] .language-divider {
+            color: #666;
+        }
     </style>
 </head>
 <body>
     <a href="{{ route('index') }}" class="back-button">
-        <i class="bi bi-arrow-left"></i> Volver
+        <i class="bi bi-arrow-left"></i> {{ __('app.auth.common.back') }}
     </a>
     
+    <!-- Selector de idiomas -->
+    <div class="language-selector">
+        <a href="{{ route('language.switch', 'es') }}" 
+           class="lang-link {{ app()->getLocale() == 'es' ? 'active' : '' }}"
+           title="{{ __('app.change_language') }}">
+            ES
+        </a>
+        <span class="language-divider">|</span>
+        <a href="{{ route('language.switch', 'en') }}" 
+           class="lang-link {{ app()->getLocale() == 'en' ? 'active' : '' }}"
+           title="{{ __('app.change_language') }}">
+            EN
+        </a>
+    </div>
+    
     <!-- Botón para cambiar tema -->
-    <button id="theme-toggle" class="theme-toggle-btn">
+    <button id="theme-toggle" class="theme-toggle-btn" title="{{ __('app.auth.common.toggle_theme_dark') }}">
         <i class="bi bi-moon-fill" id="theme-icon"></i>
     </button>
     
@@ -441,28 +523,28 @@
     
     <div class="login-container">
         <div class="logo-container">
-            <h1 class="logo-text">Mi sueño <span class="dulce">dulce</span></h1>
-            <img src="{{ asset('img/logo/logo.png') }}" alt="Logo Manga Pastelera" class="logo-image">
+            <h1 class="logo-text">{{ __('app.site_title') }}</h1>
+            <img src="{{ asset('img/logo/logo.png') }}" alt="{{ __('app.site_title') }}" class="logo-image">
         </div>
         
         <div class="login-card">
-            <h2 class="login-title">Iniciar sesión</h2>
+            <h2 class="login-title">{{ __('app.auth.login.login_title') }}</h2>
             
             <form method="POST" action="{{ route('login') }}" id="loginForm">
                 @csrf
                 
                 <div class="mb-3">
-                    <label for="email" class="form-label">Correo electronico:</label>
-                    <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required autofocus>
+                    <label for="email" class="form-label">{{ __('app.auth.login.email_label') }}:</label>
+                    <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="{{ __('app.auth.login.email_placeholder') }}" required autofocus>
                     @error('email')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
                 
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña:</label>
+                    <label for="password" class="form-label">{{ __('app.auth.login.password_label') }}:</label>
                     <div class="password-container">
-                        <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" required>
+                        <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('app.auth.login.password_placeholder') }}" required>
                         <button type="button" class="password-toggle" id="togglePassword">
                             <i class="bi bi-eye"></i>
                         </button>
@@ -472,12 +554,12 @@
                     @enderror
                 </div>
                 
-                <button type="submit" id="loginButton" class="btn btn-login">Iniciar Sesion</button>
+                <button type="submit" id="loginButton" class="btn btn-login">{{ __('app.auth.login.login_button') }}</button>
                 
-                <a href="{{ route('password.request') }}" class="forgot-link">¿Olvidaste tu contraseña?</a>
+                <a href="{{ route('password.request') }}" class="forgot-link">{{ __('app.auth.login.forgot_password') }}</a>
                 
                 <div class="register-container">
-                    ¿No tienes cuenta? <a href="{{ route('register', request()->query()) }}" class="register-link">Regístrate aquí</a>
+                    {{ __('app.auth.login.no_account') }} <a href="{{ route('register', request()->query()) }}" class="register-link">{{ __('app.auth.login.register_link') }}</a>
                 </div>
             </form>
         </div>
@@ -500,6 +582,11 @@
             if (currentTheme === 'dark') {
                 document.body.setAttribute('data-theme', 'dark');
                 themeIcon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+                themeToggleBtn.title = "{{ __('app.auth.common.toggle_theme_light') }}";
+            } else {
+                document.body.setAttribute('data-theme', 'light');
+                themeIcon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+                themeToggleBtn.title = "{{ __('app.auth.common.toggle_theme_dark') }}";
             }
             
             // Función para cambiar el tema
@@ -508,10 +595,12 @@
                     document.body.removeAttribute('data-theme');
                     localStorage.setItem('theme', 'light');
                     themeIcon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+                    themeToggleBtn.title = "{{ __('app.auth.common.toggle_theme_light') }}";
                 } else {
                     document.body.setAttribute('data-theme', 'dark');
                     localStorage.setItem('theme', 'dark');
                     themeIcon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+                    themeToggleBtn.title = "{{ __('app.auth.common.toggle_theme_dark') }}";
                 }
             });
 
@@ -560,7 +649,7 @@
                     
                     isSubmitting = true;
                     loginButton.disabled = true;
-                    loginButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Iniciando sesión...';
+                    loginButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> {{ __('app.auth.login.logging_in') }}';
                 });
             }
         });

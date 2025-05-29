@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ app()->getLocale() }}" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - Mi Sueño Dulce</title>
+    <title>{{ __('app.auth.register.title') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
@@ -398,42 +398,124 @@
         .theme-toggle-btn i {
             font-size: 1.2rem;
         }
+
+        /* Selector de idiomas */
+        .language-selector {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #fff;
+            padding: 8px 12px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        [data-theme="dark"] .language-selector {
+            background-color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        .lang-link {
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lang-link:hover {
+            color: #ff7070;
+            background-color: rgba(255, 112, 112, 0.1);
+        }
+
+        .lang-link.active {
+            color: #ff7070;
+            background-color: rgba(255, 112, 112, 0.15);
+            font-weight: 700;
+        }
+
+        .language-divider {
+            color: #ccc;
+            font-weight: 300;
+            user-select: none;
+        }
+
+        [data-theme="dark"] .lang-link {
+            color: #ccc;
+        }
+
+        [data-theme="dark"] .lang-link:hover {
+            color: #ff7070;
+            background-color: rgba(255, 112, 112, 0.1);
+        }
+
+        [data-theme="dark"] .lang-link.active {
+            color: #ff7070;
+            background-color: rgba(255, 112, 112, 0.15);
+        }
+
+        [data-theme="dark"] .language-divider {
+            color: #666;
+        }
     </style>
 </head>
 <body>
     <a href="{{ route('index') }}" class="back-button">
-        <i class="bi bi-arrow-left"></i> Volver
+        <i class="bi bi-arrow-left"></i> {{ __('app.auth.common.back') }}
     </a>
     
+    <!-- Selector de idiomas -->
+    <div class="language-selector">
+        <a href="{{ route('language.switch', 'es') }}" 
+           class="lang-link {{ app()->getLocale() == 'es' ? 'active' : '' }}"
+           title="{{ __('app.change_language') }}">
+            ES
+        </a>
+        <span class="language-divider">|</span>
+        <a href="{{ route('language.switch', 'en') }}" 
+           class="lang-link {{ app()->getLocale() == 'en' ? 'active' : '' }}"
+           title="{{ __('app.change_language') }}">
+            EN
+        </a>
+    </div>
+    
     <!-- Botón para cambiar tema -->
-    <button id="theme-toggle" class="theme-toggle-btn">
+    <button id="theme-toggle" class="theme-toggle-btn" title="{{ __('app.auth.common.toggle_theme_dark') }}">
         <i class="bi bi-moon-fill" id="theme-icon"></i>
     </button>
     
     <div class="register-container">
         <div class="logo-container">
-            <h1 class="logo-text">Mi Sueño <span class="dulce">Dulce</span></h1>
-            <img src="{{ asset('img/logo/logo.png') }}" alt="Logo" class="logo-image">
+            <h1 class="logo-text">{{ __('app.site_title') }}</h1>
+            <img src="{{ asset('img/logo/logo.png') }}" alt="{{ __('app.site_title') }}" class="logo-image">
         </div>
 
         <div class="register-card">
-            <h2 class="register-title">Registro</h2>
+            <h2 class="register-title">{{ __('app.auth.register.register_title') }}</h2>
             
             <form method="POST" action="{{ route('register.verify', request()->query()) }}" id="registerForm">
                 @csrf
                 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="name" class="form-label">Nombre:</label>
-                        <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required autofocus>
+                        <label for="name" class="form-label">{{ __('app.auth.register.name_label') }}:</label>
+                        <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="{{ __('app.auth.register.name_placeholder') }}" required autofocus>
                         @error('name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     
                     <div class="col-md-6 mb-3">
-                        <label for="apellido" class="form-label">Apellidos:</label>
-                        <input type="text" name="apellido" id="apellido" class="form-control @error('apellido') is-invalid @enderror" value="{{ old('apellido') }}" required>
+                        <label for="apellido" class="form-label">{{ __('app.auth.register.lastname_label') }}:</label>
+                        <input type="text" name="apellido" id="apellido" class="form-control @error('apellido') is-invalid @enderror" value="{{ old('apellido') }}" placeholder="{{ __('app.auth.register.lastname_placeholder') }}" required>
                         @error('apellido')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -441,25 +523,25 @@
                 </div>
                 
                 <div class="mb-3">
-                    <label for="email" class="form-label">Correo electrónico:</label>
-                    <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                    <label for="email" class="form-label">{{ __('app.auth.register.email_label') }}:</label>
+                    <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="{{ __('app.auth.register.email_placeholder') }}" required>
                     @error('email')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 
                 <div class="mb-3">
-                    <label for="telefono" class="form-label">Teléfono:</label>
-                    <input type="tel" name="telefono" id="telefono" class="form-control @error('telefono') is-invalid @enderror" value="{{ old('telefono') }}" required>
+                    <label for="telefono" class="form-label">{{ __('app.auth.register.phone_label') }}:</label>
+                    <input type="tel" name="telefono" id="telefono" class="form-control @error('telefono') is-invalid @enderror" value="{{ old('telefono') }}" placeholder="{{ __('app.auth.register.phone_placeholder') }}" required>
                     @error('telefono')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña:</label>
+                    <label for="password" class="form-label">{{ __('app.auth.register.password_label') }}:</label>
                     <div class="password-container">
-                        <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" required>
+                        <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('app.auth.register.password_placeholder') }}" required>
                         <button type="button" class="password-toggle" id="togglePassword">
                             <i class="bi bi-eye"></i>
                         </button>
@@ -470,9 +552,9 @@
                 </div>
                 
                 <div class="mb-3">
-                    <label for="password-confirm" class="form-label">Confirmar contraseña:</label>
+                    <label for="password-confirm" class="form-label">{{ __('app.auth.register.password_confirm_label') }}:</label>
                     <div class="password-container">
-                        <input type="password" name="password_confirmation" id="password-confirm" class="form-control @error('password_confirmation') is-invalid @enderror" required>
+                        <input type="password" name="password_confirmation" id="password-confirm" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="{{ __('app.auth.register.password_confirm_placeholder') }}" required>
                         <button type="button" class="password-toggle" id="toggleConfirmPassword">
                             <i class="bi bi-eye"></i>
                         </button>
@@ -482,10 +564,10 @@
                     @enderror
                 </div>
                 
-                <button type="submit" id="registerButton" class="btn btn-register">Registrarme</button>
+                <button type="submit" id="registerButton" class="btn btn-register">{{ __('app.auth.register.register_button') }}</button>
                 
                 <div class="login-container">
-                    ¿Ya tienes cuenta? <a href="{{ route('login', request()->query()) }}" class="login-link">Inicia sesión aquí</a>
+                    {{ __('app.auth.register.already_account') }} <a href="{{ route('login', request()->query()) }}" class="login-link">{{ __('app.auth.register.login_link') }}</a>
                 </div>
             </form>
         </div>
@@ -518,12 +600,21 @@
                     document.body.removeAttribute('data-theme');
                     localStorage.setItem('theme', 'light');
                     themeIcon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+                    themeToggleBtn.title = "{{ __('app.auth.common.toggle_theme_light') }}";
                 } else {
                     document.body.setAttribute('data-theme', 'dark');
                     localStorage.setItem('theme', 'dark');
                     themeIcon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+                    themeToggleBtn.title = "{{ __('app.auth.common.toggle_theme_dark') }}";
                 }
             });
+
+            // Actualizar título inicial del botón de tema
+            if (currentTheme === 'dark') {
+                themeToggleBtn.title = "{{ __('app.auth.common.toggle_theme_light') }}";
+            } else {
+                themeToggleBtn.title = "{{ __('app.auth.common.toggle_theme_dark') }}";
+            }
 
             if (togglePassword && passwordInput) {
                 togglePassword.addEventListener('click', function() {
@@ -564,7 +655,7 @@
                     
                     isSubmitting = true;
                     registerButton.disabled = true;
-                    registerButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...';
+                    registerButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> {{ __('app.auth.register.processing') }}';
                 });
             }
         });

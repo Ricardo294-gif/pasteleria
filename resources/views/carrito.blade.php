@@ -1,13 +1,13 @@
 @extends('layouts.layout')
 
-@section('title', 'Carrito de Compras')
+@section('title', __('app.cart.title'))
 
 @section('content')
     <section class="cart section">
         <div class="container">
             <div class="section-title text-center">
-                <h2>Carrito de Compras</h2>
-                <p>Revisa tus productos seleccionados</p>
+                <h2>{{ __('app.cart.title') }}</h2>
+                <p>{{ __('app.cart.subtitle') }}</p>
             </div>
 
             @if(session('success'))
@@ -33,8 +33,8 @@
                                             <h4>{{ $item->producto->nombre }}</h4>
                                             <p class="price">€{{ number_format($item->precio_unitario, 2) }}</p>
                                             <div class="quantity">
-                                                <span>Cantidad: {{ $item->cantidad }}</span>
-                                                <span class="subtotal">Subtotal: €{{ number_format($item->subtotal, 2) }}</span>
+                                                <span>{{ __('app.cart.quantity') }}: {{ $item->cantidad }}</span>
+                                                <span class="subtotal">{{ __('app.cart.subtotal') }}: €{{ number_format($item->subtotal, 2) }}</span>
                                             </div>
                                         </div>
                                         <div class="col-md-3 text-end">
@@ -42,7 +42,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger">
-                                                    <i class="bi bi-trash"></i> Eliminar
+                                                    <i class="bi bi-trash"></i> {{ __('app.cart.remove') }}
                                                 </button>
                                             </form>
                                         </div>
@@ -54,9 +54,9 @@
 
                     <div class="col-lg-4">
                         <div class="cart-summary">
-                            <h3>Resumen del Pedido</h3>
+                            <h3>{{ __('app.cart.order_summary') }}</h3>
                             <div class="summary-item">
-                                <span>Total:</span>
+                                <span>{{ __('app.cart.total') }}:</span>
                                 <span class="total">€{{ number_format($total, 2) }}</span>
                             </div>
                             <div class="cart-actions">
@@ -64,11 +64,11 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-outline-danger">
-                                        <i class="bi bi-trash"></i> Vaciar Carrito
+                                        <i class="bi bi-trash"></i> {{ __('app.cart.empty_cart') }}
                                     </button>
                                 </form>
                                 <a href="{{ route('compra') }}" class="btn" style="background-color: #ff7070; color: white; border-color: #ff7070;">
-                                    <i class="bi bi-cart-check"></i> Proceder al Pago
+                                    <i class="bi bi-cart-check"></i> {{ __('app.cart.proceed_to_payment') }}
                                 </a>
                             </div>
                         </div>
@@ -76,9 +76,9 @@
                 </div>
             @else
                 <div class="text-center">
-                    <p>Tu carrito está vacío</p>
+                    <p>{{ __('app.cart.cart_empty') }}</p>
                     <a href="{{ route('index') }}" class="btn" style="background-color: #ff7070; color: white; border-color: #ff7070;">
-                        <i class="bi bi-arrow-left"></i> Volver a la Tienda
+                        <i class="bi bi-arrow-left"></i> {{ __('app.cart.back_to_store') }}
                     </a>
                 </div>
             @endif
